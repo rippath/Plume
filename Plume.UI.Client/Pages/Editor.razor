@@ -1,0 +1,62 @@
+@page "/editor"
+@using Plume.UI.Client.Components
+@using Plume.UI.Client.Models
+
+<div class="mb-4">
+    <EditorJs Config="@_editorConfig" OnSavedJson="HandleSaved"/>
+</div>
+
+@code {
+
+    private EditorJsConfig _editorConfig = new();
+
+    protected override void OnInitialized()
+    {
+        _editorConfig = new EditorJsConfig
+        {
+            Placeholder = "ކޮންމެވެސް މޮޅު ވާހަކަ އަކުން ފަށަމާ...",
+            RightToLeft = true, // Set to true for RTL support
+            Tools = new Dictionary<string, EditorToolConfig>
+            {
+                { "header", new EditorToolConfig { Class = "Header", InlineToolbar = true, Config = new { placeholder = "ސުރުހީ..." } } },
+                { "list", new EditorToolConfig { Class = "EditorjsList", InlineToolbar = true } },
+                { "quote", new EditorToolConfig { Class = "Quote", InlineToolbar = true } },
+                { "linkTool", new EditorToolConfig { Class = "LinkTool", Config = new { endpoint = "/api/link/fetchUrl" } } },
+                { "table", new EditorToolConfig { Class = "Table", InlineToolbar = true, Config = new { rows = 2, cols = 3 } } },
+                { "code", new EditorToolConfig { Class = "CodeTool" } },
+                { "image", new EditorToolConfig { Class = "SimpleImage"} },
+                { "embed", new EditorToolConfig { Class = "EmbedTool", Config = new {
+                    services = new {
+                        youtube = new {
+                            height = 400,
+                            width = 600
+                        }
+                    }
+                } } },
+                { "fontFamily", new EditorToolConfig { Class = "FontFamily" } },
+                { "fontSize", new EditorToolConfig { Class = "FontSize" } }
+            },
+            InlineToolbar = new[] { "fontFamily", "fontSize","bold","link","marker", "italic" },
+            I18n = new I18nConfig
+            {
+                Direction = "rtl" // Change to "rtl" for right-to-left languages
+            },
+            Autofocus = true,
+            Data = new {
+                blocks = new object[] {
+                    new { type = "header", data = new { text = "", level = 2 } },
+                    new { type = "paragraph", data = new { text = "" } }
+                }
+            }
+        };
+    }
+
+    private Task HandleSaved(string json)
+    {
+        Console.WriteLine("Got JSON from editor: " + json);
+        // save to DB, send to server, whatever
+        return Task.CompletedTask;
+    }
+
+}
+

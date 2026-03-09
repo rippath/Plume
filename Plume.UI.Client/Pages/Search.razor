@@ -1,0 +1,44 @@
+@page "/search"
+@page "/search/{Query}"
+@using MudBlazor
+@inject NavigationManager NavigationManager
+
+<div class="search-page">
+    <MudText Typo="Typo.h4" GutterBottom="true">ހޯދި ނަތީޖާ</MudText>
+
+    @if (!string.IsNullOrEmpty(Query))
+    {
+        <MudText Typo="Typo.h6" Class="mb-4">"'@Query'" އަށް ހޯދި ނަތީޖާތައް</MudText>
+
+        @for (int i = 1; i <= 5; i++)
+        {
+            <MudCard Class="mb-4">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">ލިޔުން @i</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudText>މިއީ ހޯދި ލިޔުމެއްގެ ކުރު ޚުލާސާއެކެވެ.</MudText>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="@(() => NavigateToPost(i))">އިތުރަށް ކިޔުއްވާ</MudButton>
+                </MudCardActions>
+            </MudCard>
+        }
+    }
+    else
+    {
+        <MudText>ހޯދަން ބޭނުންވާ ލަފުޒެއް ލިޔުއްވާ</MudText>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public string? Query { get; set; }
+
+    private void NavigateToPost(int postId)
+    {
+        NavigationManager.NavigateTo($"/post/{postId}");
+    }
+}

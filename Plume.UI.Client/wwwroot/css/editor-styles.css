@@ -1,0 +1,53 @@
+/* Set default font for Editor.js */
+.codex-editor,
+.ce-block__content,
+.ce-paragraph,
+.ce-header {
+    font-family: 'MV Typewriter', sans-serif;
+}
+
+/* Dropdown styles for font tools */
+.ce-inline-tool-actions {
+    padding: 5px;
+}
+
+.ce-inline-tool-select {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: white;
+    font-size: 14px;
+    cursor: pointer;
+    min-width: 150px;
+}
+
+.ce-inline-tool-select:hover {
+    border-color: #999;
+}
+
+.ce-inline-tool-select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.mud-appbar-glass {
+    backdrop-filter: blur(10px);
+}
+
+/* Ensure block toolbar is visible */
+.ce-toolbar__plus,
+.ce-toolbar__settings-btn {
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Make sure SimpleImage tool appears in toolbox */
+.ce-popover__item[data-item-name="image"] {
+    display: block !important;
+}
+
+.codex-editor__redactor
+{
+    padding-bottom: 100px !important;
+}

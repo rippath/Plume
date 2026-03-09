@@ -1,0 +1,31 @@
+@page "/administration"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Administrator")]
+
+<PageTitle>ފަލްސަފާ</PageTitle>
+
+<MudText Typo="Typo.h3" GutterBottom="true">ފަލްސަފާ</MudText>
+
+<MudGrid>
+    <MudItem xs="12" sm="6" md="4">
+        <MudPaper Class="pa-4">
+            <MudText Typo="Typo.h5">ተጠቃሚዎች</MudText>
+            <MudText>ተጠቃሚዎች башкаር, ሚናዎችን መድብ እና ፍቃዶችን አዘጋጅ.</MudText>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Link="/administration/users" Class="mt-4">ተጠቃሚዎች башкаር</MudButton>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" sm="6" md="4">
+        <MudPaper Class="pa-4">
+            <MudText Typo="Typo.h5">ሚናዎች</MudText>
+            <MudText>በስርዓቱ ውስጥ ያሉትን ሚናዎች እና ፈቃዶቻቸውን ይቆጣጠሩ.</MudText>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Link="/administration/roles" Class="mt-4">ሚናዎችን ያስተዳድሩ</MudButton>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" sm="6" md="4">
+        <MudPaper Class="pa-4">
+            <MudText Typo="Typo.h5">ቅንብሮች</MudText>
+            <MudText>የስርዓት-ሰፊ ቅንብሮችን እና ምርጫዎችን ያዋቅሩ.</MudText>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Link="/administration/settings" Class="mt-4">ቅንብሮችን ያስተዳድሩ</MudButton>
+        </MudPaper>
+    </MudItem>
+</MudGrid>

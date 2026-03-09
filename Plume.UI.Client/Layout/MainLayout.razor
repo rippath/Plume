@@ -1,0 +1,111 @@
+@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
+@inject IClientAuthService AuthService
+
+<MudRTLProvider RightToLeft="true">
+    <MudThemeProvider Theme="@_theme" @bind-IsDarkMode="@_isDarkMode" />
+    <MudPopoverProvider />
+    <MudDialogProvider />
+    <MudSnackbarProvider />
+
+    <MudLayout>
+        <MudAppBar Fixed="true" Dense="true" Elevation="0">
+            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" OnClick="@DrawerToggle" />
+
+            <MudText Typo="Typo.h5" Class="ml-3" Color="Color.Inherit" Style="font-weight: bold">ފަތްތޫރަ</MudText>
+
+            <MudSpacer />
+
+            <MudTextField @bind-Value="_searchQuery" Placeholder="ހޯދާ" Variant="Variant.Outlined" Margin="Margin.Dense" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" OnAdornmentClick="Search" />
+
+            <MudTooltip Text="Toggle light/dark theme">
+                <MudIconButton Icon="@(_isDarkMode ? Icons.Material.Filled.Brightness7 : Icons.Material.Filled.Brightness4)" Color="Color.Inherit" OnClick="ToggleDarkMode" />
+            </MudTooltip>
+
+            <AuthorizeView>
+                <Authorized>
+                    <MudMenu Icon="@Icons.Material.Filled.Person" Color="Color.Inherit" Dense="true">
+                        <MudMenuItem Href="/profile/me">ޕްރޮފައިލް ބައްލަވާ</MudMenuItem>
+                        <MudMenuItem Href="/settings">ސެޓިންގްސް</MudMenuItem>
+                        <MudMenuItem OnClick="HandleLogout">ސައިން-އައުޓް</MudMenuItem>
+                    </MudMenu>
+                </Authorized>
+                <NotAuthorized>
+                    <MudMenu Icon="@Icons.Material.Filled.Person" Color="Color.Inherit" Dense="true">
+                        <MudMenuItem Href="/register">ރަޖިސްޓްރީ ކުރައްވާ</MudMenuItem>
+                        <MudMenuItem Href="/login">ސައިން-އިން ކުރައްވާ</MudMenuItem>
+                    </MudMenu>
+                </NotAuthorized>
+            </AuthorizeView>
+        </MudAppBar>
+
+        <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="0">
+            <NavMenu />
+        </MudDrawer>
+
+        <MudMainContent Class="pt-16 px-8">
+            @Body
+        </MudMainContent>
+    </MudLayout>
+</MudRTLProvider>
+
+@code {
+    private bool _drawerOpen = true;
+    private bool _isDarkMode = false;
+    private string _searchQuery = "";
+    private MudTheme _theme = new();
+
+    protected override void OnInitialized()
+    {
+        _theme = new MudTheme
+        {
+            PaletteLight = new PaletteLight
+            {
+                Primary = "#594AE2",
+                AppbarBackground = "rgba(255,255,255,0.8)",
+                Background = "#f5f5f5",
+                Surface = "#ffffff",
+            },
+            PaletteDark = new PaletteDark
+            {
+                Primary = "#776be7",
+                AppbarBackground = "rgba(30,30,45,0.8)",
+                Background = "#1e1e2d",
+                Surface = "#26263a"
+            },
+            Typography = new Typography
+            {
+                Default = new DefaultTypography
+                {
+                    FontFamily = new[] { "MV Typewriter", "Ak Rasmee" }
+                }
+            }
+        };
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Check for OAuth callback token
+            await AuthService.CheckOAuthCallbackAsync();
+        }
+    }
+
+    private void DrawerToggle() => _drawerOpen = !_drawerOpen;
+    private void ToggleDarkMode() => _isDarkMode = !_isDarkMode;
+
+    private void Search()
+    {
+        if (!string.IsNullOrWhiteSpace(_searchQuery))
+        {
+            NavigationManager.NavigateTo($"/search/{_searchQuery}");
+        }
+    }
+
+    private async Task HandleLogout()
+    {
+        await AuthService.LogoutAsync();
+        NavigationManager.NavigateTo("/");
+    }
+}

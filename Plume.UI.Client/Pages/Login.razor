@@ -1,0 +1,20 @@
+@page "/login"
+@using Plume.UI.Client.Components.Authentication
+
+<PageTitle>ސައިން-އިން</PageTitle>
+
+<MudGrid Justify="Justify.Center" Class="mt-16">
+    <MudItem xs="12" sm="8" md="4">
+        <LoginComponent RedirectUrl="@GetRedirectUrl()" />
+    </MudItem>
+</MudGrid>
+
+@code {
+    [SupplyParameterFromQuery]
+    public string? ReturnUrl { get; set; }
+
+    private string GetRedirectUrl()
+    {
+        return string.IsNullOrEmpty(ReturnUrl) ? "/" : Uri.UnescapeDataString(ReturnUrl);
+    }
+}

@@ -1,0 +1,125 @@
+@namespace Plume.UI.Client.Components.Authentication
+@inject IClientAuthService AuthService
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+
+<MudPaper Class="pa-4" Elevation="3">
+    <MudText Typo="Typo.h5" GutterBottom="true">ސައިން-އިން</MudText>
+
+    @if (!string.IsNullOrEmpty(_errorMessage))
+    {
+        <MudAlert Severity="Severity.Error" Class="mb-4">@_errorMessage</MudAlert>
+    }
+
+    <MudForm @ref="_form" @bind-IsValid="_isValid" Model="@_model">
+        <MudTextField T="string"
+                      Label="އީމެއިލް"
+                      @bind-Value="_model.Email"
+                      For="@(() => _model.Email)"
+                      Required="true"
+                      RequiredError="އީމެއިލް ބޭނުންވެއެވެ."
+                      InputType="InputType.Email"
+                      Disabled="_isLoading" />
+
+        <MudTextField T="string"
+                      Label="ޕާސްވޯޑް"
+                      @bind-Value="_model.Password"
+                      For="@(() => _model.Password)"
+                      InputType="InputType.Password"
+                      Required="true"
+                      RequiredError="ޕާސްވޯޑް ބޭނުންވެއެވެ."
+                      Disabled="_isLoading" />
+
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   OnClick="LoginWithEmail"
+                   Disabled="@(!_isValid || _isLoading)"
+                   Class="mt-4"
+                   FullWidth="true">
+            @if (_isLoading)
+            {
+                <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="mr-2" />
+            }
+            ސައިން-އިން
+        </MudButton>
+    </MudForm>
+
+    <MudDivider Class="my-4" />
+
+    <MudButton Variant="Variant.Outlined"
+               StartIcon="@Icons.Custom.Brands.Google"
+               Color="Color.Default"
+               OnClick="LoginWithGoogle"
+               FullWidth="true"
+               Disabled="_isLoading">
+        ގޫގަލް އިން ސައިން-އިން ކުރައްވާ
+    </MudButton>
+
+    <MudText Typo="Typo.body2" Class="mt-4" Align="Align.Center">
+        އެކައުންޓެއް ނެތީތޯ؟ <MudLink Href="/register">ރަޖިސްޓްރީ ކުރައްވާ</MudLink>
+    </MudText>
+</MudPaper>
+
+@code {
+    private MudForm _form = null!;
+    private bool _isValid;
+    private bool _isLoading;
+    private string? _errorMessage;
+    private readonly LoginModel _model = new();
+
+    [Parameter]
+    public string RedirectUrl { get; set; } = "/";
+
+    protected override void OnInitialized()
+    {
+        // Check for error from OAuth callback
+        var uri = new Uri(Navigation.Uri);
+        var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+        var error = query["error"];
+
+        if (!string.IsNullOrEmpty(error))
+        {
+            _errorMessage = error == "google_auth_failed"
+                ? "ގޫގަލް އޮތެންޓިކޭޝަން ފެއިލް ވެއްޖެ."
+                : Uri.UnescapeDataString(error);
+        }
+    }
+
+    private async Task LoginWithEmail()
+    {
+        await _form.Validate();
+        if (!_form.IsValid) return;
+
+        _isLoading = true;
+        _errorMessage = null;
+
+        try
+        {
+            var result = await AuthService.LoginAsync(_model.Email, _model.Password);
+
+            if (result.Success)
+            {
+                Snackbar.Add("ސައިން-އިން ކާމިޔާބު!", Severity.Success);
+                Navigation.NavigateTo(RedirectUrl, forceLoad: true);
+            }
+            else
+            {
+                _errorMessage = result.Error ?? result.Errors?.FirstOrDefault() ?? "ލޮގިން ފެއިލް ވެއްޖެ.";
+            }
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = $"އެރާއެއް ދިމާވެއްޖެ: {ex.Message}";
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private void LoginWithGoogle()
+    {
+        var googleLoginUrl = $"api/auth/google-login?redirectUrl={Uri.EscapeDataString(RedirectUrl)}";
+        Navigation.NavigateTo(googleLoginUrl, forceLoad: true);
+    }
+}

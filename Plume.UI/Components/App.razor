@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <base href="/"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet"/>
+    <link href=@Assets["_content/MudBlazor/MudBlazor.min.css"] rel="stylesheet"/>
+    <link href="css/editor-styles.css" rel="stylesheet"/>
+    <ImportMap/>
+    <link rel="icon" type="image/ico" href="favicon.ico"/>
+    <HeadOutlet @rendermode="InteractiveAuto"/>
+</head>
+
+<body>
+<Routes @rendermode="InteractiveAuto"/>
+<script src="https://cdn.jsdelivr.net/npm/@@editorjs/editorjs@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@@editorjs/header@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@@editorjs/list@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@@editorjs/embed@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@@editorjs/quote@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@@editorjs/link@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@@editorjs/table@latest"></script>
+<script src="https://cdn.jsdelivr.net/gh/paraswaykole/editor-js-code@latest/dist/bundle.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/simple-image-editorjs@latest"></script>
+
+<script src="_framework/blazor.web.js"></script>
+<script src=@Assets["_content/MudBlazor/MudBlazor.min.js"]></script>
+<script src="Js/editorjsFontTools.js"></script>
+<script src="Js/embedToolWrapper.js"></script>
+<script src="Js/editorJsInterop.js"></script>
+<script src="Js/authHelpers.js"></script>
+
+</body>
+
+</html>

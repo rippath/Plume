@@ -1,0 +1,90 @@
+@page "/"
+@using MudBlazor
+
+<PageTitle>Faiythoora</PageTitle>
+
+<MudGrid Spacing="4">
+    <MudItem xs="12" md="8">
+        <MudStack>
+            <div class="d-flex align-center pa-2">
+                <MudTabs Style="width: 95%" Elevation="0">
+                    <MudTabPanel Text="ފޮލޯކުރާ">
+                        <MudText Class="mt-3">ފޮލޯކުރާ ލިޔުންތެރިންގެ ލިޔުންތައް މިތަނުން ފެންނާނެއެވެ.</MudText>
+                    </MudTabPanel>
+                    <MudTabPanel Text="ތިބާއަށް ޚާއްސަ">
+                        @for (var i = 0; i < 5; i++)
+                        {
+                            <MudCard Elevation="0" Style="background-color: transparent;">
+                                <MudCardContent>
+                                    <div class="d-flex">
+                                        <MudAvatar class="ml-2" Color="Color.Primary" Size="Size.Small">ނރ</MudAvatar>
+                                        <div class="ml-4">
+                                            <MudText Typo="Typo.body2">ނައިރާ ރިފްޢަތު</MudText>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex mt-4">
+                                        <div style="flex-grow: 1;">
+                                            <MudText Typo="Typo.h6" Style="font-weight: bold; line-height: 1.2;">މަމް މަމްގެ ހަގީގަތް</MudText>
+                                            <MudText Typo="Typo.caption" Class="text-disabled">ޑިސެމްބަރ 10</MudText>
+                                            <MudText Typo="Typo.body2" Class="mt-2">މިއީ ދިވެހި ބަހުން ލިޔެވިފައިވާ ބްލޮގެކެވެ. މި ބްލޮގްގައިވާ ލިޔުންތަކަކީ އެކި މައުޟޫތަކަށް ލިޔެވިފައިވާ ލިޔުންތަކެކެވެ. މީ އިންސާނުން އެކަކްު އަންކަކަށް ފޯރުކޮއްދޭން އެދޭ ހިޔާލާއި މަޢުލޫމާތު ފެތުރުމަށް ބޭނުން ކުރެވޭނެ އޮޅިއެކެވެ.</MudText>
+                                        </div>
+                                        <MudImage Src="https://picsum.photos/150/150" Alt="Article image" Width="112" Height="112" ObjectFit="ObjectFit.Cover" Class="rounded-lg ml-4"/>
+                                    </div>
+                                    <div class="d-flex align-center mt-4">
+                                        <MudChip T="string" Text="ޓެކްނޮލޮޖީ" Label="true" Color="Color.Default" Size="Size.Small" Class="rounded-xl"/>
+                                        <MudText Typo="Typo.caption" Class="ml-2 text-disabled">8 މިނެޓްެގެ ކިޔުމެއް</MudText>
+                                        <MudIconButton Icon="@Icons.Material.Filled.BookmarkBorder" Size="Size.Small"/>
+                                        <MudSpacer/>
+                                        <MudText Typo="Typo.caption" Class="mt-2" Inline="true">1.2K</MudText>
+                                        <MudIconButton Icon="@Icons.Material.Filled.ThumbUpOffAlt" Size="Size.Small"/>
+                                        <span class="mx-2"></span>
+                                        <MudText Typo="Typo.caption" Class="mt-2" Inline="true">34</MudText>
+                                        <MudIconButton Icon="@Icons.Material.Filled.Comment" Size="Size.Small" />
+                                    </div>
+                                </MudCardContent>
+                            </MudCard>
+                            <MudDivider/>
+                        }
+                    </MudTabPanel>
+                </MudTabs>
+            </div>
+        </MudStack>
+    </MudItem>
+    <MudItem xs="12" md="4">
+        <MudStack Spacing="4">
+            <MudText Typo="Typo.h6" Style="font-weight: bold;">މަޤުބޫލް ލިޔުންތައް</MudText>
+            <MudStack Spacing="3">
+                @for(var i = 0; i < 3; i++)
+                {
+                    <div class="d-flex">
+                        <div>
+                            <MudText Typo="Typo.body1" Style="font-weight: bold;" Class="mt-1">އިންސާނާގެ ސިއްހަތު</MudText>
+                            <div class="d-flex align-center">
+                                <MudAvatar Class="ml-2" Color="Color.Secondary" Size="Size.Small">މނ</MudAvatar>
+                                <MudText Typo="Typo.body2" Class="ml-2">ޑރ. މަރިޔަމް ނަދާ</MudText>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </MudStack>
+            
+            <MudDivider></MudDivider>
+            <div class="d-flex flex-wrap">
+                <MudChip T="string" Text="ތިމާވެށި" Class="ma-1 rounded-xl" />
+                <MudChip T="string" Text="ސައިންސް" Class="ma-1 rounded-xl" />
+                <MudChip T="string" Text="ފަންނު" Class="ma-1 rounded-xl" />
+                <MudChip T="string" Text="ފިލްމު" Class="ma-1 rounded-xl" />
+                <MudChip T="string" Text="ތާރީޚް" Class="ma-1 rounded-xl" />
+                <MudChip T="string" Text="އަދަބިއްޔާތު" Class="ma-1 rounded-xl" />
+            </div>
+
+            <div class="d-flex flex-wrap mt-4" style="filter: opacity(0.7);">
+                <MudLink Href="#" Typo="Typo.caption" Class="ma-1">އެހީ</MudLink>
+                <MudLink Href="#" Typo="Typo.caption" Class="ma-1">ލިޔުންތެރިން</MudLink>
+                <MudLink Href="#" Typo="Typo.caption" Class="ma-1">ބްލޮގް</MudLink>
+                <MudLink Href="#" Typo="Typo.caption" Class="ma-1"> ޕްރައިވަސީ</MudLink>
+                <MudLink Href="#" Typo="Typo.caption" Class="ma-1"> ޤަވާއިދު</MudLink>
+            </div>
+        </MudStack>
+    </MudItem>
+</MudGrid>

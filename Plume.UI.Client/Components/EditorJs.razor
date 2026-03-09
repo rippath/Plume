@@ -1,0 +1,80 @@
+@using System.Text.Json
+@using Plume.UI.Client.Models
+@inject IJSRuntime JS
+
+<div dir="@TextDirection">
+    <MudCard Elevation="2">
+        <MudCardContent>
+            <div id="@EditorId" class="editorjs-root"></div>
+        </MudCardContent>
+        <MudCardActions Class="d-flex justify-end">
+            <MudButton
+                Class="ml-1"
+                Variant="Variant.Outlined"
+                Color="Color.Success"
+                OnClick="SaveAsync">
+                ރައްކާ ކުރޭ
+            </MudButton>
+            <MudButton 
+                Variant="Variant.Outlined" 
+                Color="Color.Error" 
+                OnClick="SaveAsync">
+                ދެން ނޫޅެން
+            </MudButton>
+        </MudCardActions>
+    </MudCard>
+</div>
+
+@code {
+    [Parameter] public string EditorId { get; set; } = $"editorjs-{Guid.NewGuid():N}";
+    [Parameter] public object? Config { get; set; } // pass tools or config from parent
+    [Parameter] public EventCallback<string> OnSavedJson { get; set; }
+
+    private bool _initialized;
+
+    private string TextDirection
+    {
+        get
+        {
+            var config = Config as EditorJsConfig;
+            var isRtl = config?.I18n?.Direction == "rtl" || config?.RightToLeft == true;
+            return isRtl ? "rtl" : "ltr";
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !_initialized)
+        {
+            // initialize editor
+            await JS.InvokeVoidAsync("editorJsInterop.init", EditorId, Config ?? new { });
+            _initialized = true;
+        }
+    }
+
+    public async Task SaveAsync()
+    {
+        try
+        {
+            // get JSON data (object) from JS
+            var result = await JS.InvokeAsync<object>("editorJsInterop.save", EditorId);
+            // convert to JSON string
+            var json = JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true });
+            await OnSavedJson.InvokeAsync(json);
+            // optional: show in console
+            Console.WriteLine("Saved editor data: " + json);
+        }
+        catch (JSException jex)
+        {
+            Console.Error.WriteLine("Error saving editor: " + jex.Message);
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_initialized)
+        {
+            await JS.InvokeVoidAsync("editorJsInterop.destroy", EditorId);
+        }
+    }
+}

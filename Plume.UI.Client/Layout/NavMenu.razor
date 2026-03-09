@@ -1,0 +1,12 @@
+﻿<MudList T="string" >
+    @* <MudListSubheader>Menu</MudListSubheader> *@
+    <MudListItem T="string" Href="/" Icon="@Icons.Material.Filled.Home" Text="ފުރަތަމަ ސަފްހާ"/>
+    <MudListItem T="string" Href="editor" Icon="@Icons.Material.Filled.Add" Text="އާ ލިޔުމެއް"/>
+    <MudListItem T="string" Href="profile/Gemini" Icon="@Icons.Material.Filled.Person" Text="ޕްރޮފައިލް"/>
+    <MudListItem T="string" Href="my-stories" Icon="@Icons.Material.Filled.ListAlt" Text="އަހަރެންގެ ލިޔުންތައް"/>
+    <AuthorizeView Roles="Administrator">
+        <Authorized>
+            <MudListItem T="string" Href="/administration" Icon="@Icons.Material.Filled.AdminPanelSettings" Text="ފަލްސަފާ"/>
+        </Authorized>
+    </AuthorizeView>
+</MudList>

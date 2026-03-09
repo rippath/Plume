@@ -1,0 +1,9 @@
+@page "/administration/users"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Administrator")]
+
+<PageTitle>ተጠቃሚዎች</PageTitle>
+
+<MudText Typo="Typo.h3" GutterBottom="true">ተጠቃሚዎች</MudText>
+
+<MudText>މިތަނުގައި ተጠቃሚዎችን башкаርることができる.</MudText>

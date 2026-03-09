@@ -1,0 +1,19 @@
+
+.mud-appbar-glass {
+    backdrop-filter: blur(10px);
+}
+
+.profile-page .mud-paper {
+    border-radius: 8px;
+}
+
+.profile-page .mud-avatar {
+    width: 100px !important;
+    height: 100px !important;
+    font-size: 48px;
+}
+
+.profile-page .mud-card {
+    margin-bottom: 16px;
+    border-radius: 8px;
+}

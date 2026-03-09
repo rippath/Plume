@@ -1,0 +1,60 @@
+@page "/profile/{Username}"
+@using MudBlazor
+
+<div class="profile-page">
+    <MudGrid Justify="Justify.Center">
+        <MudItem xs="12" sm="10" md="8" lg="6">
+            <MudPaper Class="pa-4">
+                <MudGrid>
+                    <MudItem xs="12" sm="3">
+                        <MudAvatar Color="Color.Primary" Size="Size.Large">@GetInitials(Username)</MudAvatar>
+                    </MudItem>
+                    <MudItem xs="12" sm="9">
+                        <MudText Typo="Typo.h5">@Username</MudText>
+                        <MudText Typo="Typo.body1">@Username އެވެ އޭނާގެ ކުރު ބަޔޯއެއް</MudText>
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+
+            <MudTabs Centered="true" Class="mt-4">
+                <MudTabPanel Text="ލިޔުންތައް">
+                    <MudList T="object">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            <MudListItem T="object">
+                                <MudCard>
+                                    <MudCardHeader>
+                                        <CardHeaderContent>
+                                            <MudText Typo="Typo.h6">ލިޔުން @i</MudText>
+                                        </CardHeaderContent>
+                                    </MudCardHeader>
+                                    <MudCardContent>
+                                        <MudText>މިއީ ލިޔުން @i ގެ ކޮންޓެންޓެވެ.</MudText>
+                                    </MudCardContent>
+                                    <MudCardActions>
+                                        <MudButton Variant="Variant.Text" Color="Color.Primary">އިތުރަށް ކިޔުއްވާ</MudButton>
+                                    </MudCardActions>
+                                </MudCard>
+                            </MudListItem>
+                        }
+                    </MudList>
+                </MudTabPanel>
+                <MudTabPanel Text="އޭނާގެ մասިން">
+                    <MudText>މިއީ @Username ގެ މައުލޫމާތު ހިމެނޭ ބައެވެ.</MudText>
+                </MudTabPanel>
+            </MudTabs>
+        </MudItem>
+    </MudGrid>
+</div>
+
+@code {
+    [Parameter]
+    public string? Username { get; set; }
+
+    private string GetInitials(string? username)
+    {
+        if (string.IsNullOrEmpty(username))
+            return "";
+        return username.Length > 1 ? username.Substring(0, 1).ToUpper() : username.ToUpper();
+    }
+}

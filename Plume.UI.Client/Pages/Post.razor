@@ -1,0 +1,109 @@
+@page "/post/{PostId}"
+
+<div class="post-page">
+    <MudGrid Justify="Justify.Center">
+        <MudItem xs="12" sm="10" md="8">
+            <MudPaper Class="pa-4">
+                <MudText Typo="Typo.h4">ލިޔުމުގެ ހެޑިން</MudText>
+                
+                <div class="d-flex align-center my-4">
+                    <MudAvatar>
+                        <MudImage Src="https://avatars.githubusercontent.com/u/10125139?v=4" />
+                    </MudAvatar>
+                    <div class="ml-3">
+                        <MudText Typo="Typo.body1">އަލީ އަޙްމަދު</MudText>
+                        <MudText Typo="Typo.body2" Color="Color.Secondary">5 މިނެޓުގެ ކިޔުން · 23 ޖެނުއަރީ 2026</MudText>
+                    </div>
+                    <MudSpacer />
+                    <MudButton Variant="Variant.Text" Color="Color.Primary">ފޮލޯ ކުރައްވާ</MudButton>
+                </div>
+
+                <div class="d-flex align-center justify-space-between mb-4">
+                    <div>
+                        <MudIconButton Icon="@Icons.Material.Filled.ThumbUp" />
+                        <MudText Inline="true">1.2K</MudText>
+                        <MudIconButton Icon="@Icons.Material.Filled.Comment" Class="ml-2" />
+                        <MudText Inline="true">34</MudText>
+                    </div>
+                    <div>
+                        <MudIconButton Icon="@Icons.Material.Filled.BookmarkAdd" />
+                        <MudMenu Icon="@Icons.Material.Filled.MoreVert" Dense="true">
+                            <MudMenuItem>ހިއްސާ ކުރައްވާ</MudMenuItem>
+                            <MudMenuItem>ރިޕޯޓް ކުރައްވާ</MudMenuItem>
+                        </MudMenu>
+                    </div>
+                </div>
+
+                <div class="post-content">
+                    <MudText>މިއީ ލިޔުމުގެ ކޮންޓެންޓެވެ. މިތާ ލިޔުމުގެ ފުރިހަމަ ތަފްސީލު ހިމެނޭނެއެވެ. މިއީ ލިޔުމުގެ ކޮންޓެންޓެވެ. މިތާ ލިޔުމުގެ ފުރިހަމަ ތަފްސީލު ހިމެނޭނެއެވެ. މިއީ ލިޔުމުގެ ކޮންޓެންޓެވެ. މިތާ ލިޔުމުގެ ފުރިހަމަ ތަފްސީލު ހިމެނޭނެއެވެ.</MudText>
+                    <MudCard Class="my-4">
+                        <MudCardMedia Image="https://picsum.photos/seed/picsum/800/400" Height="400" />
+                    </MudCard>
+                    <MudText>މިއީ ލިޔުމުގެ ކޮންޓެންޓެވެ. މިތާ ލިޔުމުގެ ފުރިހަމަ ތަފްސީލު ހިމެނޭނެއެވެ. މިއީ ލިޔުމުގެ ކޮންޓެންޓެވެ. މިތާ ލިޔުމުގެ ފުރިހަމަ ތަފްސީލު ހިމެނޭނެއެވެ. މިއީ ލިޔުމުގެ ކޮންޓެންޓެވެ. މިތާ ލިޔުމުގެ ފުރިހަމަ ތަފްސީލު ހިމެނޭނެއެވެ.</MudText>
+                </div>
+
+                <div class="mt-8">
+                    <MudText Typo="Typo.h6" GutterBottom="true">ޓެގްތައް</MudText>
+                    <MudChipSet T="string">
+                        <MudChip T="string" Text="ޓެކްނޮލޮޖީ" />
+                        <MudChip T="string" Text="ބްލޮގް" />
+                        <MudChip T="string" Text="ޕްރޮގްރާމިންގ" />
+                    </MudChipSet>
+                </div>
+
+                <div class="mt-8">
+                    <MudCard>
+                        <MudCardContent>
+                            <div class="d-flex">
+                                <MudAvatar>
+                                    <MudImage Src="https://avatars.githubusercontent.com/u/10125139?v=4" />
+                                </MudAvatar>
+                                <div class="ml-4">
+                                    <MudText Typo="Typo.h6">އަލީ އަޙްމަދު</MudText>
+                                    <MudText Typo="Typo.body2">1.5K ފޮލޯވަރުން · 300 ފޮލޯ ކުރާ</MudText>
+                                    <MudButton Variant="Variant.Outlined" Size="Size.Small" Class="mt-2">ފޮލޯ ކުރައްވާ</MudButton>
+                                </div>
+                            </div>
+                            <MudText Typo="Typo.body1" Class="mt-4">މިއީ އޮތޯރ ގެ ކުރު ބަޔޯއެކެވެ. އޭނާގެ ޝައުގުވެރިކަމާއި ތަޖުރިބާގެ މައްޗަށް އަލިއަޅުވާލާ ލިޔުމެކެވެ.</MudText>
+                        </MudCardContent>
+                    </MudCard>
+                </div>
+
+                <div class="mt-8">
+                    <MudText Typo="Typo.h6" GutterBottom="true">ކޮމެންޓްސް</MudText>
+                    <MudTextField T="string" Label="ކޮމެންޓެއް ލިޔުއްވާ" Variant="Variant.Outlined" Lines="3" />
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-2">ކޮމެންޓް ޕޯސްޓް ކުރައްވާ</MudButton>
+
+                    <div class="mt-4">
+                        @for (int i = 0; i < 3; i++)
+                        {
+                            <MudCard Class="mb-4">
+                                <MudCardHeader>
+                                    <CardHeaderContent>
+                                        <div class="d-flex align-center">
+                                            <MudAvatar Size="Size.Small">
+                                                <MudImage Src="@($"https://i.pravatar.cc/40?u={i}")" />
+                                            </MudAvatar>
+                                            <MudText Typo="Typo.body1" Class="ml-2">ޔޫސުފް</MudText>
+                                        </div>
+                                    </CardHeaderContent>
+                                </MudCardHeader>
+                                <MudCardContent>
+                                    <MudText>މިއީ ވަރަށް ފުރިހަމަ ލިޔުމެކެވެ.</MudText>
+                                </MudCardContent>
+                                <MudCardActions>
+                                    <MudButton Variant="Variant.Text" Size="Size.Small">ޖަވާބު ދެއްވާ</MudButton>
+                                </MudCardActions>
+                            </MudCard>
+                        }
+                    </div>
+                </div>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+</div>
+
+@code {
+    [Parameter]
+    public string? PostId { get; set; }
+}
