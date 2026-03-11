@@ -77,12 +77,13 @@
         };
     }
 
-    private Task HandleSaved(string json)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        Console.WriteLine("Got JSON from editor: " + json);
-        // save to DB, send to server, whatever
-        return Task.CompletedTask;
-    }
+        base.OnAfterRender(firstRender);
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("dhivehi.setupDhivehiInput", "title-field-wrapper");
+        }
     }
     
     private async Task PublishAsync()

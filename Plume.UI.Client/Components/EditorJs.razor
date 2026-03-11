@@ -48,6 +48,7 @@
         {
             // initialize editor
             await JS.InvokeVoidAsync("editorJsInterop.init", EditorId, Config ?? new { });
+            await JS.InvokeVoidAsync("dhivehi.setupDhivehiEditor", EditorId);
             _initialized = true;
         }
     }
