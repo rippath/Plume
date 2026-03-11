@@ -1,6 +1,8 @@
+using Contract.Persistence.Articles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Plume.Persistence.Identity;
+using Plume.Persistence.Repositories;
 
 namespace Plume.Persistence;
 
@@ -18,6 +20,8 @@ public static class DependencyInjection
 
         services.AddDbContext<PlumeIdentityDbContext>(options =>
             options.UseMySQL(connectionString));
+
+        services.AddScoped<IArticleRepository, ArticleRepository>();
 
         return services;
     }
