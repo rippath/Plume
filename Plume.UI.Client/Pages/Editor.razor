@@ -14,8 +14,10 @@
 
 <div id="title-field-wrapper" class="mb-4">
     <MudTextField @bind-Value="_title"
-                  Label="ސުރުހީ"
+                  Label="ސުރުޙީ"
+                  Margin="Margin.Dense"
                   Variant="Variant.Outlined"
+                  id="title"
                   FullWidth="true"
                   dir="rtl" />
 </div>
@@ -24,15 +26,11 @@
     <EditorJs @ref="_editorRef" Config="@_editorConfig" OnSavedJson="HandleSaved" />
 </div>
 
-<div class="d-flex justify-end">
-    <MudButton Variant="Variant.Filled"
-               Color="Color.Primary"
-               Disabled="_isSaving"
-               OnClick="PublishAsync">
-        @(_isSaving ? "ރައްކާ ކުރަނީ..." : "ޝާއިއު ކުރޭ")
-    </MudButton>
-</div>
-
+<style>
+    .mud-input-label-outlined {
+        padding: 2px 5px !important;
+    }
+</style>
 @code {
 
     private EditorJs? _editorRef;
@@ -70,7 +68,7 @@
             Autofocus = true,
             Data = new {
                 blocks = new object[] {
-                    new { type = "header", data = new { text = "", level = 2 } },
+                    // new { type = "header", data = new { text = "", level = 2 } },
                     new { type = "paragraph", data = new { text = "" } }
                 }
             }
@@ -86,13 +84,6 @@
         }
     }
     
-    private async Task PublishAsync()
-    {
-        if (_editorRef is null) return;
-        _isPublishing = true;
-        await _editorRef.SaveAsync();
-    }
-
     private async Task HandleSaved(string json)
     {
         if (string.IsNullOrWhiteSpace(_title))
