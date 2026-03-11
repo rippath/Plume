@@ -1,12 +1,44 @@
 @page "/editor"
+@using System.Net.Http.Headers
+@using System.Net.Http.Json
+@using Contract.Requests.Articles
+@using Contract.Responses.Articles
+@using Contract.Common
+@using Plume.UI.Client.Auth
 @using Plume.UI.Client.Components
 @using Plume.UI.Client.Models
+@inject HttpClient Http
+@inject IClientAuthService AuthService
+@inject IJSRuntime JSRuntime
+@inject ISnackbar Snackbar
+
+<div id="title-field-wrapper" class="mb-4">
+    <MudTextField @bind-Value="_title"
+                  Label="ސުރުހީ"
+                  Variant="Variant.Outlined"
+                  FullWidth="true"
+                  dir="rtl" />
+</div>
 
 <div class="mb-4">
-    <EditorJs Config="@_editorConfig" OnSavedJson="HandleSaved"/>
+    <EditorJs @ref="_editorRef" Config="@_editorConfig" OnSavedJson="HandleSaved" />
+</div>
+
+<div class="d-flex justify-end">
+    <MudButton Variant="Variant.Filled"
+               Color="Color.Primary"
+               Disabled="_isSaving"
+               OnClick="PublishAsync">
+        @(_isSaving ? "ރައްކާ ކުރަނީ..." : "ޝާއިއު ކުރޭ")
+    </MudButton>
 </div>
 
 @code {
+
+    private EditorJs? _editorRef;
+    private string _title = string.Empty;
+    private bool _isPublishing;
+    private bool _isSaving;
 
     private EditorJsConfig _editorConfig = new();
 
@@ -15,7 +47,7 @@
         _editorConfig = new EditorJsConfig
         {
             Placeholder = "ކޮންމެވެސް މޮޅު ވާހަކަ އަކުން ފަށަމާ...",
-            RightToLeft = true, // Set to true for RTL support
+            RightToLeft = true,
             Tools = new Dictionary<string, EditorToolConfig>
             {
                 { "header", new EditorToolConfig { Class = "Header", InlineToolbar = true, Config = new { placeholder = "ސުރުހީ..." } } },
@@ -24,23 +56,17 @@
                 { "linkTool", new EditorToolConfig { Class = "LinkTool", Config = new { endpoint = "/api/link/fetchUrl" } } },
                 { "table", new EditorToolConfig { Class = "Table", InlineToolbar = true, Config = new { rows = 2, cols = 3 } } },
                 { "code", new EditorToolConfig { Class = "CodeTool" } },
-                { "image", new EditorToolConfig { Class = "SimpleImage"} },
+                { "image", new EditorToolConfig { Class = "SimpleImage" } },
                 { "embed", new EditorToolConfig { Class = "EmbedTool", Config = new {
                     services = new {
-                        youtube = new {
-                            height = 400,
-                            width = 600
-                        }
+                        youtube = new { height = 400, width = 600 }
                     }
                 } } },
                 { "fontFamily", new EditorToolConfig { Class = "FontFamily" } },
                 { "fontSize", new EditorToolConfig { Class = "FontSize" } }
             },
-            InlineToolbar = new[] { "fontFamily", "fontSize","bold","link","marker", "italic" },
-            I18n = new I18nConfig
-            {
-                Direction = "rtl" // Change to "rtl" for right-to-left languages
-            },
+            InlineToolbar = new[] { "fontFamily", "fontSize", "bold", "link", "marker", "italic" },
+            I18n = new I18nConfig { Direction = "rtl" },
             Autofocus = true,
             Data = new {
                 blocks = new object[] {
@@ -57,6 +83,68 @@
         // save to DB, send to server, whatever
         return Task.CompletedTask;
     }
+    }
+    
+    private async Task PublishAsync()
+    {
+        if (_editorRef is null) return;
+        _isPublishing = true;
+        await _editorRef.SaveAsync();
+    }
+
+    private async Task HandleSaved(string json)
+    {
+        if (string.IsNullOrWhiteSpace(_title))
+        {
+            Snackbar.Add("ސުރުހީ ލިޔުއްވާ.", Severity.Warning);
+            _isPublishing = false;
+            return;
+        }
+
+        _isSaving = true;
+        StateHasChanged();
+
+        try
+        {
+            var token = await AuthService.GetAccessTokenAsync();
+            if (string.IsNullOrEmpty(token))
+            {
+                Snackbar.Add("ލޮގިން ވެލައްވާ.", Severity.Warning);
+                return;
+            }
+
+            using var request = new HttpRequestMessage(HttpMethod.Post, "api/articles/me");
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            request.Content = JsonContent.Create(new CreateArticleRequest
+            {
+                Title = _title,
+                Content = json,
+                Publish = _isPublishing
+            });
+
+            var httpResponse = await Http.SendAsync(request);
+            var result = await httpResponse.Content.ReadFromJsonAsync<Response<ArticleResponse>>();
+
+            if (result?.Success == true)
+            {
+                var message = _isPublishing ? "ލިޔުން ޝާއިއު ކުރެވިއްޖެ!" : "ލިޔުން ރައްކާ ކުރެވިއްޖެ!";
+                Snackbar.Add(message, Severity.Success);
+            }
+            else
+            {
+                Snackbar.Add(result?.Message ?? "ލިޔުން ރައްކާ ކުރެވޭ ވަރެއް ނުވި.", Severity.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Error: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            _isSaving = false;
+            _isPublishing = false;
+            StateHasChanged();
+        }
+    }
 
 }
-
