@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor.Services;
+using Plume.Application;
 using Plume.Identity;
 using Plume.Persistence;
 using Plume.UI.Client.Auth;
@@ -13,8 +14,11 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
-// Add Persistence (DbContexts)
+// Add Persistence (DbContexts + repositories)
 builder.Services.AddPersistence(connectionString);
+
+// Add Application services
+builder.Services.AddApplication();
 
 // Add Identity services (includes authentication and authorization)
 builder.Services.AddIdentityServices(builder.Configuration);

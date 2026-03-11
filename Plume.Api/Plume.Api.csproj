@@ -16,6 +16,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Plume.Application\Plume.Application.csproj" />
+      <ProjectReference Include="..\Plume.Identity\Plume.Identity.csproj" />
       <ProjectReference Include="..\Plume.Persistence\Plume.Persistence.csproj" />
     </ItemGroup>
 
