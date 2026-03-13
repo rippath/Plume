@@ -12,3 +12,8 @@ window.getCookie = function (name) {
 window.deleteCookie = function (name) {
     document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
 };
+
+window.setCookie = function (name, value, days) {
+    const maxAge = days * 24 * 60 * 60;
+    document.cookie = `${name}=${value}; path=/; max-age=${maxAge}; SameSite=Lax`;
+};
