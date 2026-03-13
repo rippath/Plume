@@ -1,6 +1,8 @@
+@using Plume.UI.Client.Contracts.Local
 @inherits LayoutComponentBase
 @inject NavigationManager NavigationManager
 @inject IClientAuthService AuthService
+@inject IThemePreferenceService ThemePreferenceService
 
 <MudRTLProvider RightToLeft="true">
     <MudThemeProvider Theme="@_theme" @bind-IsDarkMode="@_isDarkMode" />
@@ -51,7 +53,7 @@
 
 @code {
     private bool _drawerOpen = true;
-    private bool _isDarkMode = false;
+    private bool _isDarkMode;
     private string _searchQuery = "";
     private MudTheme _theme = new();
 
@@ -83,17 +85,26 @@
         };
     }
 
+    protected override async Task OnInitializedAsync()
+    {
+        _isDarkMode = await ThemePreferenceService.GetDarkModeAsync();
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            // Check for OAuth callback token
             await AuthService.CheckOAuthCallbackAsync();
         }
     }
 
     private void DrawerToggle() => _drawerOpen = !_drawerOpen;
-    private void ToggleDarkMode() => _isDarkMode = !_isDarkMode;
+
+    private async Task ToggleDarkMode()
+    {
+        _isDarkMode = !_isDarkMode;
+        await ThemePreferenceService.SetDarkModeAsync(_isDarkMode);
+    }
 
     private void Search()
     {
