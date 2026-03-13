@@ -4,6 +4,7 @@ using Plume.Application;
 using Plume.Identity;
 using Plume.Persistence;
 using Plume.UI.Client.Auth;
+using Plume.UI.Client.Contracts.Local;
 using Plume.UI.Client.Pages;
 using Plume.UI.Components;
 using Plume.UI.Services;
@@ -38,6 +39,9 @@ builder.Services.AddHttpContextAccessor();
 // Add server-side auth services for prerendering
 builder.Services.AddScoped<IClientAuthService, ServerAuthService>();
 builder.Services.AddScoped<AuthenticationStateProvider, ServerAuthStateProvider>();
+
+// Add server-side theme preference service (reads darkMode cookie from HttpContext)
+builder.Services.AddScoped<IThemePreferenceService, ServerThemePreferenceService>();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
