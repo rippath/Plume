@@ -4,7 +4,7 @@
 .ce-paragraph,
 .ce-header {
     font-family: 'MV Typewriter', sans-serif;
-    max-width: 100% !important;
+    max-width: 85% !important;
 }
 
 /* Dropdown styles for font tools */
@@ -51,4 +51,14 @@
 .codex-editor__redactor
 {
     padding-bottom: 100px !important;
+}
+
+/* Let clicks pass through the <img> to Editor.js's block manager so the
+   image block can be independently selected and deleted. The caption input
+   below the image is a separate element and remains fully interactive. */
+.image-tool__image-picture {
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    draggable: false;
 }
