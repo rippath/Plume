@@ -4,7 +4,7 @@
 .ce-paragraph,
 .ce-header {
     font-family: 'MV Typewriter', sans-serif;
-    max-width: 85% !important;
+    max-width: 95% !important;
 }
 
 /* Dropdown styles for font tools */
@@ -14,9 +14,7 @@
 
 .ce-inline-tool-select {
     padding: 5px 10px;
-    border: 1px solid #ccc;
     border-radius: 4px;
-    background-color: white;
     font-size: 14px;
     cursor: pointer;
     min-width: 150px;
@@ -51,6 +49,94 @@
 .codex-editor__redactor
 {
     padding-bottom: 100px !important;
+}
+
+/* ── Dark-mode theming for Editor.js ──────────────────────────────────────
+   Uses MudBlazor CSS variables so colours update automatically when the
+   user toggles the theme — no media query needed.                         */
+
+/* Block toolbar: + button and ⋮ settings button */
+.ce-toolbar__plus,
+.ce-toolbar__settings-btn {
+    background-color: var(--mud-palette-surface) !important;
+    color: var(--mud-palette-text-primary) !important;
+    border: 1px solid var(--mud-palette-lines-default) !important;
+}
+
+.ce-toolbar__plus:hover,
+.ce-toolbar__settings-btn:hover {
+    background-color: var(--mud-palette-action-hover) !important;
+}
+
+/* Inline formatting toolbar (bold, italic, link …) */
+.ce-inline-toolbar {
+    background-color: var(--mud-palette-surface) !important;
+    border: 1px solid var(--mud-palette-lines-default) !important;
+}
+
+.ce-inline-tool,
+.ce-inline-toolbar__dropdown {
+    color: var(--mud-palette-text-primary) !important;
+}
+
+.ce-inline-tool:hover,
+.ce-inline-toolbar__dropdown:hover {
+    background-color: var(--mud-palette-action-hover) !important;
+}
+
+/* Block-type popover (opened with + button) */
+.ce-popover,
+.ce-popover__container {
+    background-color: var(--mud-palette-surface) !important;
+    border: 1px solid var(--mud-palette-lines-default) !important;
+    color: var(--mud-palette-text-primary) !important;
+}
+
+.ce-popover-item__title,
+.ce-popover-item__secondary-title {
+    color: var(--mud-palette-text-primary) !important;
+}
+
+.ce-popover-item:hover,
+.ce-popover-item--focused {
+    background-color: var(--mud-palette-action-hover) !important;
+}
+
+.ce-popover__search .cdx-search-field {
+    background-color: var(--mud-palette-background) !important;
+    border: 1px solid var(--mud-palette-lines-default) !important;
+    color: var(--mud-palette-text-primary) !important;
+}
+
+/* Block settings / tunes panel */
+.ce-settings {
+    background-color: var(--mud-palette-surface) !important;
+    border: 1px solid var(--mud-palette-lines-default) !important;
+}
+
+.cdx-settings-button {
+    color: var(--mud-palette-text-primary) !important;
+}
+
+.cdx-settings-button:hover {
+    background-color: var(--mud-palette-action-hover) !important;
+}
+
+/* Font-tool dropdowns (already scoped, but needs dark colours) */
+.ce-inline-tool-select {
+    background-color: var(--mud-palette-surface) !important;
+    color: var(--mud-palette-text-primary) !important;
+    border-color: var(--mud-palette-lines-default) !important;
+}
+
+/* Responsive YouTube / embed iframes — override the fixed inline dimensions
+   set by @editorjs/embed and maintain a 16:9 aspect ratio. */
+.embed-tool__content {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 16 / 9;
+    display: block;
+    border-radius: 8px;
 }
 
 /* Let clicks pass through the <img> to Editor.js's block manager so the

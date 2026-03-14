@@ -1,0 +1,348 @@
+@using System.Text.Json
+@using Microsoft.AspNetCore.Components.Rendering
+
+<div class="editorjs-renderer" dir="rtl">
+    @foreach (var block in _blocks)
+    {
+        @RenderBlock(block)
+    }
+</div>
+
+<style>
+    .editorjs-renderer {
+        line-height: 1.8;
+        font-size: 1.05rem;
+    }
+    .editorjs-renderer p {
+        margin: 0 0 1em;
+    }
+    .editorjs-renderer blockquote {
+        border-right: 4px solid var(--mud-palette-primary);
+        margin: 1.5em 0;
+        padding: 0.75em 1.25em;
+        background: rgba(128,128,128,0.06);
+        border-radius: 4px;
+    }
+    .editorjs-renderer blockquote cite {
+        display: block;
+        margin-top: 0.5em;
+        font-size: 0.875rem;
+        color: var(--mud-palette-text-secondary);
+    }
+    .editorjs-renderer pre {
+        background: rgba(0,0,0,0.06);
+        border-radius: 8px;
+        padding: 1em 1.25em;
+        overflow-x: auto;
+        font-family: monospace;
+        margin: 1em 0;
+        direction: ltr;
+        text-align: left;
+    }
+    .editorjs-renderer table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1em 0;
+    }
+    .editorjs-renderer table th,
+    .editorjs-renderer table td {
+        border: 1px solid rgba(128,128,128,0.25);
+        padding: 0.5em 0.75em;
+    }
+    .editorjs-renderer table th {
+        font-weight: 700;
+        background: rgba(128,128,128,0.08);
+    }
+    .editorjs-renderer .ejs-image {
+        margin: 1.5em 0;
+        text-align: center;
+    }
+    .editorjs-renderer .ejs-image img {
+        max-width: 100%;
+        border-radius: 8px;
+    }
+    .editorjs-renderer .ejs-image figcaption {
+        font-size: 0.875rem;
+        color: var(--mud-palette-text-secondary);
+        margin-top: 0.5em;
+    }
+    .editorjs-renderer .ejs-embed {
+        margin: 1.5em 0;
+        text-align: center;
+    }
+    .editorjs-renderer .ejs-embed iframe {
+        max-width: 100%;
+        border-radius: 8px;
+        border: none;
+    }
+    .editorjs-renderer .ejs-link-card {
+        display: flex;
+        gap: 1em;
+        border: 1px solid rgba(128,128,128,0.2);
+        border-radius: 10px;
+        padding: 0.75em 1em;
+        margin: 1em 0;
+        text-decoration: none;
+        color: inherit;
+        overflow: hidden;
+    }
+    .editorjs-renderer .ejs-link-card img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 6px;
+        flex-shrink: 0;
+    }
+    .editorjs-renderer .ejs-link-card-body {
+        overflow: hidden;
+    }
+    .editorjs-renderer .ejs-link-card-title {
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .editorjs-renderer .ejs-link-card-desc {
+        font-size: 0.85rem;
+        color: var(--mud-palette-text-secondary);
+        margin-top: 0.25em;
+    }
+</style>
+
+@code {
+    [Parameter] public string? ContentJson { get; set; }
+
+    private List<JsonElement> _blocks = [];
+
+    protected override void OnParametersSet()
+    {
+        _blocks = [];
+        if (string.IsNullOrWhiteSpace(ContentJson)) return;
+        try
+        {
+            using var doc = JsonDocument.Parse(ContentJson);
+            if (doc.RootElement.TryGetProperty("blocks", out var blocks))
+                _blocks = blocks.EnumerateArray().Select(b => b.Clone()).ToList();
+        }
+        catch { /* malformed JSON — render nothing */ }
+    }
+
+    private RenderFragment RenderBlock(JsonElement block) => builder =>
+    {
+        var type = block.TryGetProperty("type", out var t) ? t.GetString() : null;
+        var hasData = block.TryGetProperty("data", out var data);
+        if (!hasData) return;
+
+        switch (type)
+        {
+            case "paragraph":
+                RenderParagraph(builder, data);
+                break;
+            case "header":
+                RenderHeader(builder, data);
+                break;
+            case "list":
+                RenderList(builder, data);
+                break;
+            case "quote":
+                RenderQuote(builder, data);
+                break;
+            case "code":
+                RenderCode(builder, data);
+                break;
+            case "image":
+                RenderImage(builder, data);
+                break;
+            case "embed":
+                RenderEmbed(builder, data);
+                break;
+            case "table":
+                RenderTable(builder, data);
+                break;
+            case "linkTool":
+                RenderLinkTool(builder, data);
+                break;
+        }
+    };
+
+    private static void RenderParagraph(RenderTreeBuilder b, JsonElement data)
+    {
+        var text = GetString(data, "text");
+        if (string.IsNullOrEmpty(text)) return;
+        b.OpenElement(0, "p");
+        b.AddContent(1, (MarkupString)text);
+        b.CloseElement();
+    }
+
+    private static void RenderHeader(RenderTreeBuilder b, JsonElement data)
+    {
+        var text = GetString(data, "text");
+        var level = data.TryGetProperty("level", out var l) && l.TryGetInt32(out var lv) ? lv : 2;
+        level = Math.Clamp(level, 1, 6);
+        if (string.IsNullOrEmpty(text)) return;
+        b.OpenElement(0, $"h{level}");
+        b.AddContent(1, (MarkupString)text);
+        b.CloseElement();
+    }
+
+    private static void RenderList(RenderTreeBuilder b, JsonElement data)
+    {
+        var style = GetString(data, "style");
+        var tag = style == "ordered" ? "ol" : "ul";
+        if (!data.TryGetProperty("items", out var items)) return;
+        b.OpenElement(0, tag);
+        foreach (var item in items.EnumerateArray())
+        {
+            b.OpenElement(1, "li");
+            // items can be plain strings or {content, items} objects (nested)
+            if (item.ValueKind == JsonValueKind.String)
+                b.AddContent(2, (MarkupString)item.GetString()!);
+            else if (item.ValueKind == JsonValueKind.Object)
+                b.AddContent(2, (MarkupString)(GetString(item, "content") ?? string.Empty));
+            b.CloseElement();
+        }
+        b.CloseElement();
+    }
+
+    private static void RenderQuote(RenderTreeBuilder b, JsonElement data)
+    {
+        var text = GetString(data, "text");
+        var caption = GetString(data, "caption");
+        if (string.IsNullOrEmpty(text)) return;
+        b.OpenElement(0, "blockquote");
+        b.AddContent(1, (MarkupString)text);
+        if (!string.IsNullOrEmpty(caption))
+        {
+            b.OpenElement(2, "cite");
+            b.AddContent(3, (MarkupString)caption);
+            b.CloseElement();
+        }
+        b.CloseElement();
+    }
+
+    private static void RenderCode(RenderTreeBuilder b, JsonElement data)
+    {
+        var code = GetString(data, "code") ?? string.Empty;
+        b.OpenElement(0, "pre");
+        b.OpenElement(1, "code");
+        b.AddContent(2, code);
+        b.CloseElement();
+        b.CloseElement();
+    }
+
+    private static void RenderImage(RenderTreeBuilder b, JsonElement data)
+    {
+        // @editorjs/image stores URL in data.file.url; SimpleImage uses data.url
+        var url = data.TryGetProperty("file", out var file)
+            ? GetString(file, "url")
+            : GetString(data, "url");
+        if (string.IsNullOrEmpty(url)) return;
+        var caption = GetString(data, "caption");
+        b.OpenElement(0, "figure");
+        b.AddAttribute(1, "class", "ejs-image");
+        b.OpenElement(2, "img");
+        b.AddAttribute(3, "src", url);
+        b.AddAttribute(4, "alt", caption ?? string.Empty);
+        b.CloseElement();
+        if (!string.IsNullOrEmpty(caption))
+        {
+            b.OpenElement(5, "figcaption");
+            b.AddContent(6, (MarkupString)caption);
+            b.CloseElement();
+        }
+        b.CloseElement();
+    }
+
+    private static void RenderEmbed(RenderTreeBuilder b, JsonElement data)
+    {
+        var embed = GetString(data, "embed");
+        if (string.IsNullOrEmpty(embed)) return;
+        var caption = GetString(data, "caption");
+        b.OpenElement(0, "figure");
+        b.AddAttribute(1, "class", "ejs-embed");
+        b.OpenElement(2, "iframe");
+        b.AddAttribute(3, "src", embed);
+        b.AddAttribute(4, "style", "width:100%;aspect-ratio:16/9;height:auto;border:none;border-radius:8px;display:block;");
+        b.AddAttribute(5, "allowfullscreen", true);
+        b.CloseElement();
+        if (!string.IsNullOrEmpty(caption))
+        {
+            b.OpenElement(7, "figcaption");
+            b.AddContent(8, (MarkupString)caption);
+            b.CloseElement();
+        }
+        b.CloseElement();
+    }
+
+    private static void RenderTable(RenderTreeBuilder b, JsonElement data)
+    {
+        if (!data.TryGetProperty("content", out var content)) return;
+        var withHeadings = data.TryGetProperty("withHeadings", out var wh) && wh.GetBoolean();
+        var rows = content.EnumerateArray().ToList();
+        if (rows.Count == 0) return;
+        b.OpenElement(0, "table");
+        var seq = 1;
+        for (var i = 0; i < rows.Count; i++)
+        {
+            var rowTag = (withHeadings && i == 0) ? "th" : "td";
+            b.OpenElement(seq++, "tr");
+            foreach (var cell in rows[i].EnumerateArray())
+            {
+                b.OpenElement(seq++, rowTag);
+                b.AddContent(seq++, (MarkupString)(cell.GetString() ?? string.Empty));
+                b.CloseElement();
+            }
+            b.CloseElement();
+        }
+        b.CloseElement();
+    }
+
+    private static void RenderLinkTool(RenderTreeBuilder b, JsonElement data)
+    {
+        var link = GetString(data, "link");
+        if (string.IsNullOrEmpty(link)) return;
+        string? title = null, desc = null, imgUrl = null;
+        if (data.TryGetProperty("meta", out var meta))
+        {
+            title = GetString(meta, "title");
+            desc = GetString(meta, "description");
+            if (meta.TryGetProperty("image", out var img))
+                imgUrl = GetString(img, "url");
+        }
+        b.OpenElement(0, "a");
+        b.AddAttribute(1, "href", link);
+        b.AddAttribute(2, "target", "_blank");
+        b.AddAttribute(3, "rel", "noopener noreferrer");
+        b.AddAttribute(4, "class", "ejs-link-card");
+        if (!string.IsNullOrEmpty(imgUrl))
+        {
+            b.OpenElement(5, "img");
+            b.AddAttribute(6, "src", imgUrl);
+            b.AddAttribute(7, "alt", title ?? string.Empty);
+            b.CloseElement();
+        }
+        b.OpenElement(8, "div");
+        b.AddAttribute(9, "class", "ejs-link-card-body");
+        if (!string.IsNullOrEmpty(title))
+        {
+            b.OpenElement(10, "div");
+            b.AddAttribute(11, "class", "ejs-link-card-title");
+            b.AddContent(12, title);
+            b.CloseElement();
+        }
+        if (!string.IsNullOrEmpty(desc))
+        {
+            b.OpenElement(13, "div");
+            b.AddAttribute(14, "class", "ejs-link-card-desc");
+            b.AddContent(15, desc);
+            b.CloseElement();
+        }
+        b.CloseElement(); // card-body
+        b.CloseElement(); // <a>
+    }
+
+    private static string? GetString(JsonElement el, string prop) =>
+        el.TryGetProperty(prop, out var v) && v.ValueKind == JsonValueKind.String
+            ? v.GetString()
+            : null;
+}
