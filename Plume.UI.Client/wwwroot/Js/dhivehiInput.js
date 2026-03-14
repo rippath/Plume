@@ -13,7 +13,7 @@ window.dhivehi = {
         }
     },
 
-    setupDhivehiInput: function (wrapperId) {
+    setupDhivehiInput: function (wrapperId, dotNetRef) {
         const keyboards = {
             phonetic: {
                 33: "!", 34: '"', 35: "#", 36: "$", 37: "%", 38: "&", 39: "'", 40: ")",
@@ -86,6 +86,11 @@ window.dhivehi = {
 
                 // Move the cursor position forward
                 element.setSelectionRange(start + 1, start + 1);
+
+                // Notify Blazor directly (synthetic events are untrusted and ignored by Blazor)
+                if (dotNetRef) {
+                    dotNetRef.invokeMethodAsync('UpdateTitle', element.value);
+                }
             }
         });
 

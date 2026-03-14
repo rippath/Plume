@@ -17,7 +17,8 @@
                             if (typeof toolClass === 'function') {
                                 toolConfig.class = toolClass;
                             } else {
-                                console.error(`Editor.js tool class '${toolConfig.class}' not found on window object.`);
+                                console.error(`Editor.js tool class '${toolConfig.class}' not found on window object. Removing tool.`);
+                                delete config.tools[toolName];
                             }
                         }
                     }
