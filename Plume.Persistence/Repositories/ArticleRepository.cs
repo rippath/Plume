@@ -66,4 +66,20 @@ public class ArticleRepository : IArticleRepository
             .OrderByDescending(a => a.UpdatedDate)
             .ToListAsync(cancellationToken);
     }
+
+    public async Task<bool> ChangeArticleStatusAsync(Guid id, ArticleStatus newStatus, CancellationToken cancellationToken = default)
+    {
+        var article = await _context.Articles
+            .SingleOrDefaultAsync(a => a.Id == id, cancellationToken);
+
+        if (article is null) return false;
+
+        article.Status = newStatus;
+
+        if (newStatus == ArticleStatus.Published && article.PublishedAt is null)
+            article.PublishedAt = DateTime.UtcNow;
+
+        var result = await _context.SaveChangesAsync(cancellationToken);
+        return result > 0;
+    }
 }

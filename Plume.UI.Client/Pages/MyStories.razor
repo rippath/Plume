@@ -8,6 +8,7 @@
 @inject HttpClient Http
 @inject IClientAuthService AuthService
 @inject ISnackbar Snackbar
+@inject IJSRuntime JS
 
 <div class="my-stories-page">
     <MudText Typo="Typo.h4" GutterBottom="true" Style="font-weight: 800;">އަހަރެންގެ ލިޔުންތައް</MudText>
@@ -19,13 +20,16 @@
 
     <MudTabs Elevation="0" Rounded="true" PanelClass="mt-4">
         <MudTabPanel Text="@($"ޑްރާފްޓްސް ({_drafts.Count})")">
-            <ArticleList Articles="_drafts" EmptyText="ޑްރާފްޓް ލިޔުމެއް ނެތް." />
+            <ArticleList Articles="_drafts" EmptyText="ޑްރާފްޓް ލިޔުމެއް ނެތް."
+                         OnPublish="HandlePublish" OnDelete="HandleDelete" />
         </MudTabPanel>
         <MudTabPanel Text="@($"ޕަބްލިޝްކުރެވިފައި ({_published.Count})")">
-            <ArticleList Articles="_published" EmptyText="ޕަބްލިޝްކުރެވިފައިވާ ލިޔުމެއް ނެތް." />
+            <ArticleList Articles="_published" EmptyText="ޕަބްލިޝްކުރެވިފައިވާ ލިޔުމެއް ނެތް."
+                         OnUnlist="HandleUnlist" OnDelete="HandleDelete" />
         </MudTabPanel>
         <MudTabPanel Text="@($"އަންލިސްޓްކުރެވިފައި ({_unlisted.Count})")">
-            <ArticleList Articles="_unlisted" EmptyText="އަންލިސްޓްކުރެވިފައިވާ ލިޔުމެއް ނެތް." />
+            <ArticleList Articles="_unlisted" EmptyText="އަންލިސްޓްކުރެވިފައިވާ ލިޔުމެއް ނެތް."
+                         OnPublish="HandlePublish" OnDelete="HandleDelete" />
         </MudTabPanel>
     </MudTabs>
 </div>
@@ -79,6 +83,57 @@
         finally
         {
             _isLoading = false;
+        }
+    }
+
+    private async Task HandlePublish(Guid id)
+    {
+        await SendStatusChangeAsync($"api/articles/me/{id}/publish", HttpMethod.Put, "ލިޔުން ޝާއިއުކުރެވިއްޖެ.");
+    }
+
+    private async Task HandleUnlist(Guid id)
+    {
+        await SendStatusChangeAsync($"api/articles/me/{id}/unlist", HttpMethod.Put, "ލިޔުން އަންލިސްޓުކުރެވިއްޖެ.");
+    }
+
+    private async Task HandleDelete(Guid id)
+    {
+        var confirmed = await JS.InvokeAsync<bool>("confirm", "ލިޔުން ޑިލީޓުކުރަން ބޭނުންތޯ؟");
+        if (!confirmed) return;
+
+        await SendStatusChangeAsync($"api/articles/me/{id}", HttpMethod.Delete, "ލިޔުން ޑިލީޓުކުރެވިއްޖެ.");
+    }
+
+    private async Task SendStatusChangeAsync(string url, HttpMethod method, string successMessage)
+    {
+        try
+        {
+            var token = await AuthService.GetAccessTokenAsync();
+            if (string.IsNullOrEmpty(token))
+            {
+                Snackbar.Add("ލޮގިން ވެލައްވާ.", Severity.Warning);
+                return;
+            }
+
+            using var request = new HttpRequestMessage(method, url);
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var httpResponse = await Http.SendAsync(request);
+            var result = await httpResponse.Content.ReadFromJsonAsync<Response<bool>>();
+
+            if (result?.Success == true)
+            {
+                Snackbar.Add(successMessage, Severity.Success);
+                await LoadArticlesAsync();
+            }
+            else
+            {
+                Snackbar.Add(result?.Message ?? "އެކްޝަން ހިންގޭ ވަރެއް ނުވި.", Severity.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Error: {ex.Message}", Severity.Error);
         }
     }
 

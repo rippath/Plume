@@ -2,6 +2,7 @@ using Contract.Persistence.Articles;
 using Contract.Services;
 using Plume.Application.Mappings;
 using Plume.Domain.Entities.Articles;
+using Plume.Domain.Enums;
 
 namespace Plume.Application.Services;
 
@@ -46,5 +47,10 @@ public class ArticleService : IArticleService
     public async Task<List<Article>> GetAllByAuthorIdAsync(Guid authorId, CancellationToken cancellationToken = default)
     {
         return await _articleRepository.GetAllByAuthorIdAsync(authorId, cancellationToken);
+    }
+
+    public async Task<bool> ChangeArticleStatusAsync(Guid id, ArticleStatus newStatus, CancellationToken cancellationToken = default)
+    {
+        return await _articleRepository.ChangeArticleStatusAsync(id, newStatus, cancellationToken);
     }
 }

@@ -6,6 +6,7 @@ using Contract.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Plume.Application.Mappings;
+using Plume.Domain.Enums;
 
 namespace Plume.UI.Controllers;
 
@@ -98,5 +99,65 @@ public class ArticlesController : ControllerBase
             return Ok(Response<ArticleResponse>.NotFound($"Article with ID {id} not found."));
 
         return Ok(Response<ArticleResponse>.Ok(article.MapToResponse()));
+    }
+
+    [HttpPut(EndPoints.Articles.UserPublish)]
+    [ProducesResponseType(typeof(Response<bool>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Response<bool>), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Publish([FromRoute] Guid id, CancellationToken cancellationToken)
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (!Guid.TryParse(userIdClaim, out var authorId))
+            return Ok(Response<bool>.Unauthorized());
+
+        var article = await _articleService.GetByIdAsync(id, cancellationToken);
+        if (article is null || article.AuthorId != authorId)
+            return Ok(Response<bool>.NotFound($"Article with ID {id} not found."));
+
+        var success = await _articleService.ChangeArticleStatusAsync(id, ArticleStatus.Published, cancellationToken);
+        if (!success)
+            return Ok(Response<bool>.ServerError("ލިޔުން ޝާއިއުކުރެވޭ ވަރެއް ނުވި."));
+
+        return Ok(Response<bool>.Ok(true, "ލިޔުން ޝާއިއުކުރެވިއްޖެ."));
+    }
+
+    [HttpPut(EndPoints.Articles.UserUnlist)]
+    [ProducesResponseType(typeof(Response<bool>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Response<bool>), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Unlist([FromRoute] Guid id, CancellationToken cancellationToken)
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (!Guid.TryParse(userIdClaim, out var authorId))
+            return Ok(Response<bool>.Unauthorized());
+
+        var article = await _articleService.GetByIdAsync(id, cancellationToken);
+        if (article is null || article.AuthorId != authorId)
+            return Ok(Response<bool>.NotFound($"Article with ID {id} not found."));
+
+        var success = await _articleService.ChangeArticleStatusAsync(id, ArticleStatus.Unlisted, cancellationToken);
+        if (!success)
+            return Ok(Response<bool>.ServerError("ލިޔުން އަންލިސްޓުކުރެވޭ ވަރެއް ނުވި."));
+
+        return Ok(Response<bool>.Ok(true, "ލިޔުން އަންލިސްޓުކުރެވިއްޖެ."));
+    }
+
+    [HttpDelete(EndPoints.Articles.UserDelete)]
+    [ProducesResponseType(typeof(Response<bool>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Response<bool>), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Delete([FromRoute] Guid id, CancellationToken cancellationToken)
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (!Guid.TryParse(userIdClaim, out var authorId))
+            return Ok(Response<bool>.Unauthorized());
+
+        var article = await _articleService.GetByIdAsync(id, cancellationToken);
+        if (article is null || article.AuthorId != authorId)
+            return Ok(Response<bool>.NotFound($"Article with ID {id} not found."));
+
+        var success = await _articleService.ChangeArticleStatusAsync(id, ArticleStatus.Deleted, cancellationToken);
+        if (!success)
+            return Ok(Response<bool>.ServerError("ލިޔުން ޑިލީޓުކުރެވޭ ވަރެއް ނުވި."));
+
+        return Ok(Response<bool>.Ok(true, "ލިޔުން ޑިލީޓުކުރެވިއްޖެ."));
     }
 }

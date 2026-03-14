@@ -24,5 +24,7 @@ public static class EndPoints
         public const string UserGet = $"{Base}/me/{{id:guid}}";
         public const string UserUpdate = $"{Base}/me/{{id:guid}}";
         public const string UserDelete = $"{Base}/me/{{id:guid}}";
+        public const string UserPublish = $"{Base}/me/{{id:guid}}/publish";
+        public const string UserUnlist = $"{Base}/me/{{id:guid}}/unlist";
     }
 }
