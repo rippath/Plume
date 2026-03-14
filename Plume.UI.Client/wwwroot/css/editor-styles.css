@@ -4,6 +4,7 @@
 .ce-paragraph,
 .ce-header {
     font-family: 'MV Typewriter', sans-serif;
+    max-width: 100% !important;
 }
 
 /* Dropdown styles for font tools */
