@@ -1,0 +1,138 @@
+@using Plume.UI.Client.Contracts.Local
+@inherits LayoutComponentBase
+@inject IThemePreferenceService ThemePreferenceService
+@inject NavigationManager NavigationManager
+
+<MudRTLProvider RightToLeft="true">
+    <MudThemeProvider Theme="@_theme" @bind-IsDarkMode="@_isDarkMode" />
+    <MudPopoverProvider />
+    <MudDialogProvider />
+    <MudSnackbarProvider />
+
+    <div class="landing-root" style="background: @(_isDarkMode ? "#1e1e2d" : "#ffffff"); min-height: 100vh;">
+
+        <!-- Sticky Navbar -->
+        <header class="landing-nav @(_isDarkMode ? "landing-nav-dark" : "landing-nav-light")">
+            <div class="landing-nav-inner">
+                <MudText Typo="Typo.h5" Style="font-weight: 800; color: #594AE2; letter-spacing: -0.5px; cursor: pointer;"
+                         @onclick='() => NavigationManager.NavigateTo("/")'>
+                    ފަތްތޫރަ
+                </MudText>
+                <div class="nav-actions">
+                    <MudButton Variant="Variant.Text" Href="/login"
+                               Style="font-weight: 600;">
+                        ވަދެލާ
+                    </MudButton>
+                    <MudButton Variant="Variant.Filled" Href="/register" Color="Color.Primary"
+                               Style="font-weight: 600; border-radius: 24px; padding: 6px 20px;">
+                        ފަށާ
+                    </MudButton>
+                    <MudTooltip Text="Theme Toggle">
+                        <MudIconButton Icon="@(_isDarkMode ? LucideIcons.Sun : LucideIcons.Moon)"
+                                       Color="Color.Inherit" OnClick="ToggleDarkMode" Size="Size.Small" />
+                    </MudTooltip>
+                </div>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <main>
+            @Body
+        </main>
+
+    </div>
+</MudRTLProvider>
+
+<style>
+    .landing-root {
+        direction: rtl;
+        font-family: "MV Typewriter", "Ak Rasmee", sans-serif;
+    }
+
+    .landing-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        padding: 12px 24px;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .landing-nav-light {
+        background: rgba(255, 255, 255, 0.85);
+        border-bottom: 1px solid rgba(0,0,0,0.06);
+        box-shadow: 0 1px 20px rgba(0,0,0,0.06);
+    }
+
+    .landing-nav-dark {
+        background: rgba(30, 30, 45, 0.88);
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        box-shadow: 0 1px 20px rgba(0,0,0,0.3);
+    }
+
+    .landing-nav-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        direction: rtl;
+    }
+
+    .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    main {
+        padding-top: 68px;
+    }
+</style>
+
+@code {
+    private bool _isDarkMode;
+    private MudTheme _theme = new();
+
+    protected override void OnInitialized()
+    {
+        _theme = new MudTheme
+        {
+            PaletteLight = new PaletteLight
+            {
+                Primary = "#594AE2",
+                AppbarBackground = "rgba(255,255,255,0.8)",
+                Background = "#ffffff",
+                Surface = "#ffffff",
+            },
+            PaletteDark = new PaletteDark
+            {
+                Primary = "#776be7",
+                AppbarBackground = "rgba(30,30,45,0.8)",
+                Background = "#1e1e2d",
+                Surface = "#26263a"
+            },
+            Typography = new Typography
+            {
+                Default = new DefaultTypography
+                {
+                    FontFamily = new[] { "MV Typewriter", "Ak Rasmee" }
+                }
+            }
+        };
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _isDarkMode = await ThemePreferenceService.GetDarkModeAsync();
+    }
+
+    private async Task ToggleDarkMode()
+    {
+        _isDarkMode = !_isDarkMode;
+        await ThemePreferenceService.SetDarkModeAsync(_isDarkMode);
+    }
+}

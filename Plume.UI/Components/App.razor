@@ -10,11 +10,11 @@
     <link href="css/editor-styles.css" rel="stylesheet"/>
     <ImportMap/>
     <link rel="icon" type="image/ico" href="favicon.ico"/>
-    <HeadOutlet @rendermode="InteractiveAuto"/>
+    <HeadOutlet @rendermode="new InteractiveWebAssemblyRenderMode(prerender: false)"/>
 </head>
 
 <body>
-<Routes @rendermode="InteractiveAuto"/>
+<Routes @rendermode="new InteractiveWebAssemblyRenderMode(prerender: false)"/>
 <script src="https://cdn.jsdelivr.net/npm/@@editorjs/editorjs@latest"></script>
 <script src="https://cdn.jsdelivr.net/npm/@@editorjs/header@latest"></script>
 <script src="https://cdn.jsdelivr.net/npm/@@editorjs/list@latest"></script>

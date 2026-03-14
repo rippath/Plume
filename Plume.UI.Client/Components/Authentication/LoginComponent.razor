@@ -3,12 +3,13 @@
 @inject NavigationManager Navigation
 @inject ISnackbar Snackbar
 
-<MudPaper Class="pa-4" Elevation="3">
-    <MudText Typo="Typo.h5" GutterBottom="true">ސައިން-އިން</MudText>
+<MudPaper Class="pa-6" Elevation="0"
+          Style="border-radius: 24px; border: 1px solid rgba(128,128,128,0.12);">
+    <MudText Typo="Typo.h5" GutterBottom="true" Style="font-weight: 800;">ސައިން-އިން</MudText>
 
     @if (!string.IsNullOrEmpty(_errorMessage))
     {
-        <MudAlert Severity="Severity.Error" Class="mb-4">@_errorMessage</MudAlert>
+        <MudAlert Severity="Severity.Error" Class="mb-4" Style="border-radius: 12px;">@_errorMessage</MudAlert>
     }
 
     <MudForm @ref="_form" @bind-IsValid="_isValid" Model="@_model">
@@ -19,7 +20,8 @@
                       Required="true"
                       RequiredError="އީމެއިލް ބޭނުންވެއެވެ."
                       InputType="InputType.Email"
-                      Disabled="_isLoading" />
+                      Disabled="_isLoading"
+                      Variant="Variant.Outlined" />
 
         <MudTextField T="string"
                       Label="ޕާސްވޯޑް"
@@ -28,14 +30,16 @@
                       InputType="InputType.Password"
                       Required="true"
                       RequiredError="ޕާސްވޯޑް ބޭނުންވެއެވެ."
-                      Disabled="_isLoading" />
+                      Disabled="_isLoading"
+                      Variant="Variant.Outlined" />
 
         <MudButton Variant="Variant.Filled"
                    Color="Color.Primary"
                    OnClick="LoginWithEmail"
                    Disabled="@(!_isValid || _isLoading)"
                    Class="mt-4"
-                   FullWidth="true">
+                   FullWidth="true"
+                   Style="border-radius: 999px; padding: 10px 0; font-weight: 700;">
             @if (_isLoading)
             {
                 <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="mr-2" />
@@ -51,7 +55,8 @@
                Color="Color.Default"
                OnClick="LoginWithGoogle"
                FullWidth="true"
-               Disabled="_isLoading">
+               Disabled="_isLoading"
+               Style="border-radius: 999px; padding: 10px 0;">
         ގޫގަލް އިން ސައިން-އިން ކުރައްވާ
     </MudButton>
 

@@ -4,28 +4,32 @@
 @inject NavigationManager NavigationManager
 
 <div class="search-page">
-    <MudText Typo="Typo.h4" GutterBottom="true">ހޯދި ނަތީޖާ</MudText>
+    <MudText Typo="Typo.h4" GutterBottom="true" Style="font-weight: 800;">ހޯދި ނަތީޖާ</MudText>
 
     @if (!string.IsNullOrEmpty(Query))
     {
         <MudText Typo="Typo.h6" Class="mb-4">"'@Query'" އަށް ހޯދި ނަތީޖާތައް</MudText>
 
-        @for (int i = 1; i <= 5; i++)
-        {
-            <MudCard Class="mb-4">
-                <MudCardHeader>
-                    <CardHeaderContent>
-                        <MudText Typo="Typo.h6">ލިޔުން @i</MudText>
-                    </CardHeaderContent>
-                </MudCardHeader>
-                <MudCardContent>
-                    <MudText>މިއީ ހޯދި ލިޔުމެއްގެ ކުރު ޚުލާސާއެކެވެ.</MudText>
-                </MudCardContent>
-                <MudCardActions>
-                    <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="@(() => NavigateToPost(i))">އިތުރަށް ކިޔުއްވާ</MudButton>
-                </MudCardActions>
-            </MudCard>
-        }
+        <MudStack Spacing="3">
+            @for (int i = 1; i <= 5; i++)
+            {
+                var postId = i;
+                <MudCard Elevation="0"
+                         Style="border-radius: 16px; border: 1px solid rgba(128,128,128,0.1);">
+                    <MudCardContent>
+                        <MudText Typo="Typo.h6" Style="font-weight: 700;">ލިޔުން @i</MudText>
+                        <MudText Typo="Typo.body2" Class="mt-1" Style="opacity: 0.65;">
+                            މިއީ ހޯދި ލިޔުމެއްގެ ކުރު ޚުލާސާއެކެވެ.
+                        </MudText>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton Variant="Variant.Text" Color="Color.Primary"
+                                   OnClick="@(() => NavigateToPost(postId))"
+                                   Style="border-radius: 999px;">އިތުރަށް ކިޔުއްވާ</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            }
+        </MudStack>
     }
     else
     {

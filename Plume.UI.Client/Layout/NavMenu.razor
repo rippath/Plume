@@ -1,12 +1,22 @@
-﻿<MudList T="string" >
-    @* <MudListSubheader>Menu</MudListSubheader> *@
-    <MudListItem T="string" Href="/" Icon="@Icons.Material.Filled.Home" Text="ފުރަތަމަ ސަފްހާ"/>
-    <MudListItem T="string" Href="editor" Icon="@Icons.Material.Filled.Add" Text="އާ ލިޔުމެއް"/>
-    <MudListItem T="string" Href="profile/Gemini" Icon="@Icons.Material.Filled.Person" Text="ޕްރޮފައިލް"/>
-    <MudListItem T="string" Href="my-stories" Icon="@Icons.Material.Filled.ListAlt" Text="އަހަރެންގެ ލިޔުންތައް"/>
+<MudList T="string" Class="nav-menu-list">
+    <MudListItem T="string" Href="/feed" Icon="@LucideIcons.Home" Text="ފުރަތަމަ ސަފްހާ" Class="nav-item"/>
+    <MudListItem T="string" Href="editor" Icon="@LucideIcons.PenLine" Text="އާ ލިޔުމެއް" Class="nav-item"/>
+    <MudListItem T="string" Href="profile/Gemini" Icon="@LucideIcons.User" Text="ޕްރޮފައިލް" Class="nav-item"/>
+    <MudListItem T="string" Href="my-stories" Icon="@LucideIcons.FileText" Text="އަހަރެންގެ ލިޔުންތައް" Class="nav-item"/>
     <AuthorizeView Roles="Administrator">
         <Authorized>
-            <MudListItem T="string" Href="/administration" Icon="@Icons.Material.Filled.AdminPanelSettings" Text="ފަލްސަފާ"/>
+            <MudListItem T="string" Href="/administration" Icon="@LucideIcons.ShieldCheck" Text="ފަލްސަފާ" Class="nav-item"/>
         </Authorized>
     </AuthorizeView>
 </MudList>
+
+<style>
+    .nav-menu-list {
+        padding: 8px;
+    }
+
+    .nav-item {
+        border-radius: 12px !important;
+        margin-bottom: 2px;
+    }
+</style>

@@ -1,33 +1,33 @@
 @page "/post/{PostId}"
-
 <div class="post-page">
     <MudGrid Justify="Justify.Center">
         <MudItem xs="12" sm="10" md="8">
-            <MudPaper Class="pa-4">
-                <MudText Typo="Typo.h4">ލިޔުމުގެ ހެޑިން</MudText>
-                
+            <MudPaper Class="pa-6" Elevation="0" Style="border-radius: 20px; border: 1px solid rgba(128,128,128,0.1);">
+                <MudText Typo="Typo.h4" Style="font-weight: 800; line-height: 1.2;">ލިޔުމުގެ ހެޑިން</MudText>
+
                 <div class="d-flex align-center my-4">
-                    <MudAvatar>
+                    <MudAvatar Style="border-radius: 50%;">
                         <MudImage Src="https://avatars.githubusercontent.com/u/10125139?v=4" />
                     </MudAvatar>
                     <div class="ml-3">
-                        <MudText Typo="Typo.body1">އަލީ އަޙްމަދު</MudText>
+                        <MudText Typo="Typo.body1" Style="font-weight: 600;">އަލީ އަޙްމަދު</MudText>
                         <MudText Typo="Typo.body2" Color="Color.Secondary">5 މިނެޓުގެ ކިޔުން · 23 ޖެނުއަރީ 2026</MudText>
                     </div>
                     <MudSpacer />
-                    <MudButton Variant="Variant.Text" Color="Color.Primary">ފޮލޯ ކުރައްވާ</MudButton>
+                    <MudButton Variant="Variant.Outlined" Color="Color.Primary"
+                               Style="border-radius: 999px; font-weight: 600;">ފޮލޯ ކުރައްވާ</MudButton>
                 </div>
 
                 <div class="d-flex align-center justify-space-between mb-4">
-                    <div>
-                        <MudIconButton Icon="@Icons.Material.Filled.ThumbUp" />
+                    <div class="d-flex align-center gap-2">
+                        <MudIconButton Icon="@LucideIcons.ThumbsUp" />
                         <MudText Inline="true">1.2K</MudText>
-                        <MudIconButton Icon="@Icons.Material.Filled.Comment" Class="ml-2" />
+                        <MudIconButton Icon="@LucideIcons.MessageCircle" Class="ml-2" />
                         <MudText Inline="true">34</MudText>
                     </div>
-                    <div>
-                        <MudIconButton Icon="@Icons.Material.Filled.BookmarkAdd" />
-                        <MudMenu Icon="@Icons.Material.Filled.MoreVert" Dense="true">
+                    <div class="d-flex align-center">
+                        <MudIconButton Icon="@LucideIcons.BookmarkPlus" />
+                        <MudMenu Icon="@LucideIcons.EllipsisVertical" Dense="true">
                             <MudMenuItem>ހިއްސާ ކުރައްވާ</MudMenuItem>
                             <MudMenuItem>ރިޕޯޓް ކުރައްވާ</MudMenuItem>
                         </MudMenu>
@@ -36,32 +36,33 @@
 
                 <div class="post-content">
                     <MudText>މިއީ ލިޔުމުގެ ކޮންޓެންޓެވެ. މިތާ ލިޔުމުގެ ފުރިހަމަ ތަފްސީލު ހިމެނޭނެއެވެ. މިއީ ލިޔުމުގެ ކޮންޓެންޓެވެ. މިތާ ލިޔުމުގެ ފުރިހަމަ ތަފްސީލު ހިމެނޭނެއެވެ. މިއީ ލިޔުމުގެ ކޮންޓެންޓެވެ. މިތާ ލިޔުމުގެ ފުރިހަމަ ތަފްސީލު ހިމެނޭނެއެވެ.</MudText>
-                    <MudCard Class="my-4">
+                    <MudCard Class="my-4" Style="border-radius: 16px; overflow: hidden;">
                         <MudCardMedia Image="https://picsum.photos/seed/picsum/800/400" Height="400" />
                     </MudCard>
                     <MudText>މިއީ ލިޔުމުގެ ކޮންޓެންޓެވެ. މިތާ ލިޔުމުގެ ފުރިހަމަ ތަފްސީލު ހިމެނޭނެއެވެ. މިއީ ލިޔުމުގެ ކޮންޓެންޓެވެ. މިތާ ލިޔުމުގެ ފުރިހަމަ ތަފްސީލު ހިމެނޭނެއެވެ. މިއީ ލިޔުމުގެ ކޮންޓެންޓެވެ. މިތާ ލިޔުމުގެ ފުރިހަމަ ތަފްސީލު ހިމެނޭނެއެވެ.</MudText>
                 </div>
 
                 <div class="mt-8">
-                    <MudText Typo="Typo.h6" GutterBottom="true">ޓެގްތައް</MudText>
+                    <MudText Typo="Typo.h6" GutterBottom="true" Style="font-weight: 700;">ޓެގްތައް</MudText>
                     <MudChipSet T="string">
-                        <MudChip T="string" Text="ޓެކްނޮލޮޖީ" />
-                        <MudChip T="string" Text="ބްލޮގް" />
-                        <MudChip T="string" Text="ޕްރޮގްރާމިންގ" />
+                        <MudChip T="string" Text="ޓެކްނޮލޮޖީ" Style="border-radius: 999px;" />
+                        <MudChip T="string" Text="ބްލޮގް" Style="border-radius: 999px;" />
+                        <MudChip T="string" Text="ޕްރޮގްރާމިންގ" Style="border-radius: 999px;" />
                     </MudChipSet>
                 </div>
 
                 <div class="mt-8">
-                    <MudCard>
+                    <MudCard Style="border-radius: 16px; border: 1px solid rgba(128,128,128,0.1);" Elevation="0">
                         <MudCardContent>
                             <div class="d-flex">
-                                <MudAvatar>
+                                <MudAvatar Style="border-radius: 50%;">
                                     <MudImage Src="https://avatars.githubusercontent.com/u/10125139?v=4" />
                                 </MudAvatar>
                                 <div class="ml-4">
-                                    <MudText Typo="Typo.h6">އަލީ އަޙްމަދު</MudText>
+                                    <MudText Typo="Typo.h6" Style="font-weight: 700;">އަލީ އަޙްމަދު</MudText>
                                     <MudText Typo="Typo.body2">1.5K ފޮލޯވަރުން · 300 ފޮލޯ ކުރާ</MudText>
-                                    <MudButton Variant="Variant.Outlined" Size="Size.Small" Class="mt-2">ފޮލޯ ކުރައްވާ</MudButton>
+                                    <MudButton Variant="Variant.Outlined" Size="Size.Small" Class="mt-2"
+                                               Style="border-radius: 999px;">ފޮލޯ ކުރައްވާ</MudButton>
                                 </div>
                             </div>
                             <MudText Typo="Typo.body1" Class="mt-4">މިއީ އޮތޯރ ގެ ކުރު ބަޔޯއެކެވެ. އޭނާގެ ޝައުގުވެރިކަމާއި ތަޖުރިބާގެ މައްޗަށް އަލިއަޅުވާލާ ލިޔުމެކެވެ.</MudText>
@@ -70,21 +71,24 @@
                 </div>
 
                 <div class="mt-8">
-                    <MudText Typo="Typo.h6" GutterBottom="true">ކޮމެންޓްސް</MudText>
-                    <MudTextField T="string" Label="ކޮމެންޓެއް ލިޔުއްވާ" Variant="Variant.Outlined" Lines="3" />
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-2">ކޮމެންޓް ޕޯސްޓް ކުރައްވާ</MudButton>
+                    <MudText Typo="Typo.h6" GutterBottom="true" Style="font-weight: 700;">ކޮމެންޓްސް</MudText>
+                    <MudTextField T="string" Label="ކޮމެންޓެއް ލިޔުއްވާ" Variant="Variant.Outlined" Lines="3"
+                                  Style="border-radius: 12px;" />
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-2"
+                               Style="border-radius: 999px;">ކޮމެންޓް ޕޯސްޓް ކުރައްވާ</MudButton>
 
                     <div class="mt-4">
                         @for (int i = 0; i < 3; i++)
                         {
-                            <MudCard Class="mb-4">
+                            <MudCard Class="mb-4" Elevation="0"
+                                     Style="border-radius: 16px; border: 1px solid rgba(128,128,128,0.08);">
                                 <MudCardHeader>
                                     <CardHeaderContent>
                                         <div class="d-flex align-center">
-                                            <MudAvatar Size="Size.Small">
+                                            <MudAvatar Size="Size.Small" Style="border-radius: 50%;">
                                                 <MudImage Src="@($"https://i.pravatar.cc/40?u={i}")" />
                                             </MudAvatar>
-                                            <MudText Typo="Typo.body1" Class="ml-2">ޔޫސުފް</MudText>
+                                            <MudText Typo="Typo.body1" Class="ml-2" Style="font-weight: 600;">ޔޫސުފް</MudText>
                                         </div>
                                     </CardHeaderContent>
                                 </MudCardHeader>
@@ -92,7 +96,8 @@
                                     <MudText>މިއީ ވަރަށް ފުރިހަމަ ލިޔުމެކެވެ.</MudText>
                                 </MudCardContent>
                                 <MudCardActions>
-                                    <MudButton Variant="Variant.Text" Size="Size.Small">ޖަވާބު ދެއްވާ</MudButton>
+                                    <MudButton Variant="Variant.Text" Size="Size.Small"
+                                               Style="border-radius: 999px;">ޖަވާބު ދެއްވާ</MudButton>
                                 </MudCardActions>
                             </MudCard>
                         }

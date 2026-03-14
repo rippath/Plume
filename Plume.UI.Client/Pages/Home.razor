@@ -1,90 +1,716 @@
 @page "/"
-@using MudBlazor
+@layout Layout.LandingLayout
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager Nav
 
-<PageTitle>Faiythoora</PageTitle>
+<PageTitle>ފަތްތޫރަ — ދިވެހި ލިޔުންތެރިކަމުގެ ގެ</PageTitle>
 
-<MudGrid Spacing="4">
-    <MudItem xs="12" md="8">
-        <MudStack>
-            <div class="d-flex align-center pa-2">
-                <MudTabs Style="width: 95%" Elevation="0">
-                    <MudTabPanel Text="ފޮލޯކުރާ">
-                        <MudText Class="mt-3">ފޮލޯކުރާ ލިޔުންތެރިންގެ ލިޔުންތައް މިތަނުން ފެންނާނެއެވެ.</MudText>
-                    </MudTabPanel>
-                    <MudTabPanel Text="ތިބާއަށް ޚާއްސަ">
-                        @for (var i = 0; i < 5; i++)
-                        {
-                            <MudCard Elevation="0" Style="background-color: transparent;">
-                                <MudCardContent>
-                                    <div class="d-flex">
-                                        <MudAvatar class="ml-2" Color="Color.Primary" Size="Size.Small">ނރ</MudAvatar>
-                                        <div class="ml-4">
-                                            <MudText Typo="Typo.body2">ނައިރާ ރިފްޢަތު</MudText>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex mt-4">
-                                        <div style="flex-grow: 1;">
-                                            <MudText Typo="Typo.h6" Style="font-weight: bold; line-height: 1.2;">މަމް މަމްގެ ހަގީގަތް</MudText>
-                                            <MudText Typo="Typo.caption" Class="text-disabled">ޑިސެމްބަރ 10</MudText>
-                                            <MudText Typo="Typo.body2" Class="mt-2">މިއީ ދިވެހި ބަހުން ލިޔެވިފައިވާ ބްލޮގެކެވެ. މި ބްލޮގްގައިވާ ލިޔުންތަކަކީ އެކި މައުޟޫތަކަށް ލިޔެވިފައިވާ ލިޔުންތަކެކެވެ. މީ އިންސާނުން އެކަކްު އަންކަކަށް ފޯރުކޮއްދޭން އެދޭ ހިޔާލާއި މަޢުލޫމާތު ފެތުރުމަށް ބޭނުން ކުރެވޭނެ އޮޅިއެކެވެ.</MudText>
-                                        </div>
-                                        <MudImage Src="https://picsum.photos/150/150" Alt="Article image" Width="112" Height="112" ObjectFit="ObjectFit.Cover" Class="rounded-lg ml-4"/>
-                                    </div>
-                                    <div class="d-flex align-center mt-4">
-                                        <MudChip T="string" Text="ޓެކްނޮލޮޖީ" Label="true" Color="Color.Default" Size="Size.Small" Class="rounded-xl"/>
-                                        <MudText Typo="Typo.caption" Class="ml-2 text-disabled">8 މިނެޓްެގެ ކިޔުމެއް</MudText>
-                                        <MudIconButton Icon="@Icons.Material.Filled.BookmarkBorder" Size="Size.Small"/>
-                                        <MudSpacer/>
-                                        <MudText Typo="Typo.caption" Class="mt-2" Inline="true">1.2K</MudText>
-                                        <MudIconButton Icon="@Icons.Material.Filled.ThumbUpOffAlt" Size="Size.Small"/>
-                                        <span class="mx-2"></span>
-                                        <MudText Typo="Typo.caption" Class="mt-2" Inline="true">34</MudText>
-                                        <MudIconButton Icon="@Icons.Material.Filled.Comment" Size="Size.Small" />
-                                    </div>
-                                </MudCardContent>
-                            </MudCard>
-                            <MudDivider/>
-                        }
-                    </MudTabPanel>
-                </MudTabs>
+<!-- ============================================================
+     HERO SECTION
+     ============================================================ -->
+<section class="hero-section">
+    <div class="hero-glow hero-glow-1"></div>
+    <div class="hero-glow hero-glow-2"></div>
+    <div class="section-container hero-content">
+        <MudText Class="hero-label">ދިވެހި ލިޔުންތެރިންގެ ހަބް</MudText>
+        <h1 class="hero-headline">
+            ލިޔޭ.<br />
+            ހިއްސާ ކުރޭ.<br />
+            <span class="hero-headline-accent">ދިވެހި ދުނިޔެ ބިނާ ކުރޭ.</span>
+        </h1>
+        <p class="hero-sub">
+            ފަތްތޫރަ އަކީ ދިވެހި ލިޔުންތެރިންނާ ކިޔުންތެރިން ގުލުވައިދޭ ވެދުންތެރި ވެއްދުމެކެވެ.
+            ތިބާގެ ހިޔާލުތައް ދިވެހި ބަހުން ލިޔެ، ހިއްސާ ކޮށް، ދިވެހި ލިޔުންތެރިކަން ކުރިއަރުވާ.
+        </p>
+        <div class="hero-ctas">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/register"
+                       Size="Size.Large" Style="border-radius: 32px; padding: 14px 36px; font-weight: 700; font-size: 1rem;">
+                ލިޔެ ފަށާ — ހިލޭ
+            </MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary" Href="/register"
+                       Size="Size.Large" Style="border-radius: 32px; padding: 14px 36px; font-weight: 600; font-size: 1rem;">
+                ކިޔަން ވަދޭ
+            </MudButton>
+        </div>
+        <p class="hero-note">ކްރެޑިޓް ކާޑެއް ނުހިމެނެ · ހިލޭ ފެށޭ</p>
+    </div>
+    <div class="hero-scroll-hint">
+        <MudIcon Icon="@LucideIcons.ChevronDown" Style="opacity: 0.4; font-size: 2rem;" />
+    </div>
+</section>
+
+<!-- ============================================================
+     STATS STRIP
+     ============================================================ -->
+<section class="stats-section">
+    <div class="section-container stats-grid">
+        @foreach (var stat in _stats)
+        {
+            <div class="stat-item">
+                <span class="stat-number">@stat.Number</span>
+                <span class="stat-label">@stat.Label</span>
             </div>
-        </MudStack>
-    </MudItem>
-    <MudItem xs="12" md="4">
-        <MudStack Spacing="4">
-            <MudText Typo="Typo.h6" Style="font-weight: bold;">މަޤުބޫލް ލިޔުންތައް</MudText>
-            <MudStack Spacing="3">
-                @for(var i = 0; i < 3; i++)
-                {
-                    <div class="d-flex">
-                        <div>
-                            <MudText Typo="Typo.body1" Style="font-weight: bold;" Class="mt-1">އިންސާނާގެ ސިއްހަތު</MudText>
-                            <div class="d-flex align-center">
-                                <MudAvatar Class="ml-2" Color="Color.Secondary" Size="Size.Small">މނ</MudAvatar>
-                                <MudText Typo="Typo.body2" Class="ml-2">ޑރ. މަރިޔަމް ނަދާ</MudText>
-                            </div>
-                        </div>
+        }
+    </div>
+</section>
+
+<!-- ============================================================
+     FOR READERS
+     ============================================================ -->
+<section class="features-section">
+    <div class="section-container">
+        <div class="section-badge">ކިޔުންތެރިންނަށް</div>
+        <h2 class="section-title">ދިވެހި ލިޔުންތަކުގެ ދުނިޔެ ހޯދާ</h2>
+        <p class="section-sub">ތަފާތު ދާއިރާތަކުން ލިޔެވިފައިވާ ދިވެހި ލިޔުންތައް ތިބާ ހައްތަހާ ހިތުގައި ޖެހޭ ގޮތަށް.</p>
+        <div class="features-grid">
+            @foreach (var feature in _readerFeatures)
+            {
+                <div class="feature-card">
+                    <div class="feature-icon-wrap feature-icon-reader">
+                        <MudIcon Icon="@feature.Icon" Style="font-size: 1.6rem; color: #594AE2;" />
                     </div>
-                }
-            </MudStack>
-            
-            <MudDivider></MudDivider>
-            <div class="d-flex flex-wrap">
-                <MudChip T="string" Text="ތިމާވެށި" Class="ma-1 rounded-xl" />
-                <MudChip T="string" Text="ސައިންސް" Class="ma-1 rounded-xl" />
-                <MudChip T="string" Text="ފަންނު" Class="ma-1 rounded-xl" />
-                <MudChip T="string" Text="ފިލްމު" Class="ma-1 rounded-xl" />
-                <MudChip T="string" Text="ތާރީޚް" Class="ma-1 rounded-xl" />
-                <MudChip T="string" Text="އަދަބިއްޔާތު" Class="ma-1 rounded-xl" />
-            </div>
+                    <h3 class="feature-title">@feature.Title</h3>
+                    <p class="feature-desc">@feature.Description</p>
+                </div>
+            }
+        </div>
+    </div>
+</section>
 
-            <div class="d-flex flex-wrap mt-4" style="filter: opacity(0.7);">
-                <MudLink Href="#" Typo="Typo.caption" Class="ma-1">އެހީ</MudLink>
-                <MudLink Href="#" Typo="Typo.caption" Class="ma-1">ލިޔުންތެރިން</MudLink>
-                <MudLink Href="#" Typo="Typo.caption" Class="ma-1">ބްލޮގް</MudLink>
-                <MudLink Href="#" Typo="Typo.caption" Class="ma-1"> ޕްރައިވަސީ</MudLink>
-                <MudLink Href="#" Typo="Typo.caption" Class="ma-1"> ޤަވާއިދު</MudLink>
-            </div>
-        </MudStack>
-    </MudItem>
-</MudGrid>
+<!-- ============================================================
+     DIVIDER
+     ============================================================ -->
+<div class="section-divider"></div>
+
+<!-- ============================================================
+     FOR WRITERS
+     ============================================================ -->
+<section class="features-section features-section-alt">
+    <div class="section-container">
+        <div class="section-badge section-badge-writer">ލިޔުންތެރިންނަށް</div>
+        <h2 class="section-title">ތިބާގެ ވާހަކަ ދިވެހި ދުނިޔެ ބަލައިގަންނާ</h2>
+        <p class="section-sub">ތިބާ ލިޔަން ބޭނުންވާ ހުރިހާ ވަސީލަތެއް ފަތްތޫރަ ތިބާ ކައިރީ ބަހައްޓާ.</p>
+        <div class="features-grid">
+            @foreach (var feature in _writerFeatures)
+            {
+                <div class="feature-card">
+                    <div class="feature-icon-wrap feature-icon-writer">
+                        <MudIcon Icon="@feature.Icon" Style="font-size: 1.6rem; color: #7C3AED;" />
+                    </div>
+                    <h3 class="feature-title">@feature.Title</h3>
+                    <p class="feature-desc">@feature.Description</p>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     HOW IT WORKS
+     ============================================================ -->
+<section class="how-section">
+    <div class="section-container">
+        <div class="section-badge section-badge-how">ފަށާ ގޮތް</div>
+        <h2 class="section-title">ތިން ފިޔަވަޅުން ފަށާ</h2>
+        <div class="steps-grid">
+            @foreach (var (step, index) in _steps.Select((s, i) => (s, i + 1)))
+            {
+                <div class="step-card">
+                    <div class="step-number">@index</div>
+                    <h3 class="feature-title">@step.Title</h3>
+                    <p class="feature-desc">@step.Description</p>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     TOPICS
+     ============================================================ -->
+<section class="topics-section">
+    <div class="section-container">
+        <h2 class="section-title" style="text-align: center;">ތިބާ ޝައުގު ހުންނަ ދާއިރާ ހޯދާ</h2>
+        <div class="topics-grid">
+            @foreach (var topic in _topics)
+            {
+                <div class="topic-chip">
+                    <MudIcon Icon="@topic.Icon" Style="font-size: 1.1rem; margin-left: 6px;" />
+                    @topic.Name
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     FINAL CTA
+     ============================================================ -->
+<section class="cta-section">
+    <div class="cta-glow"></div>
+    <div class="section-container cta-content">
+        <h2 class="cta-title">ތިބާ ތައްޔާރު ތަ؟</h2>
+        <p class="cta-sub">
+            ދިވެހި ލިޔުންތެރިކަމުގެ ގެ، ފަތްތޫރަ، ތިބާ ގެ ހިތުގެ ހިޔާލުތައް ހިއްސާ ކުރަން ތިބާ ކުރިމަތީ.
+        </p>
+        <MudButton Variant="Variant.Filled" Href="/register" Size="Size.Large"
+                   Style="border-radius: 32px; padding: 16px 48px; font-weight: 700; font-size: 1.1rem; background: #ffffff; color: #594AE2;">
+            ހިލޭ ރަޖިސްޓްރީ ވޭ
+        </MudButton>
+        <p style="margin-top: 12px; opacity: 0.75; font-size: 0.85rem;">
+            މިހާރު ވަދެ؟ <a href="/login" style="color: #ffffff; font-weight: 600; text-decoration: underline;">ސައިން-އިން ކުރޭ</a>
+        </p>
+    </div>
+</section>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer class="landing-footer">
+    <div class="section-container footer-inner">
+        <MudText Style="font-weight: 800; font-size: 1.1rem; color: #594AE2;">ފަތްތޫރަ</MudText>
+        <div class="footer-links">
+            @foreach (var link in _footerLinks)
+            {
+                <a href="@link.Href" class="footer-link">@link.Label</a>
+            }
+        </div>
+        <MudText Typo="Typo.caption" Style="opacity: 0.4; margin-top: 16px; display: block; text-align: center;">
+            © 2025 ފަތްތޫރަ. ހުރިހާ ހައްގެއް ލިބިގެންވެ.
+        </MudText>
+    </div>
+</footer>
+
+<style>
+    /* ─── Layout ─────────────────────────────── */
+    .section-container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 24px;
+    }
+
+    /* ─── Hero ───────────────────────────────── */
+    .hero-section {
+        position: relative;
+        min-height: calc(100vh - 68px);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        padding: 80px 24px 40px;
+        text-align: center;
+    }
+
+    .hero-glow {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(100px);
+        opacity: 0.12;
+        pointer-events: none;
+        animation: glow-float 8s ease-in-out infinite alternate;
+    }
+
+    .hero-glow-1 {
+        width: 600px;
+        height: 600px;
+        background: #594AE2;
+        top: -100px;
+        right: -100px;
+        animation-delay: 0s;
+    }
+
+    .hero-glow-2 {
+        width: 400px;
+        height: 400px;
+        background: #C084FC;
+        bottom: 0;
+        left: -80px;
+        animation-delay: 3s;
+    }
+
+    @@keyframes glow-float {
+        from { transform: translate(0, 0) scale(1); }
+        to   { transform: translate(30px, 20px) scale(1.1); }
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .hero-label {
+        display: inline-block;
+        background: linear-gradient(135deg, #594AE2, #8B5CF6);
+        color: white;
+        padding: 6px 18px;
+        border-radius: 32px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        margin-bottom: 24px;
+    }
+
+    .hero-headline {
+        font-size: clamp(2.2rem, 6vw, 4rem);
+        font-weight: 800;
+        line-height: 1.15;
+        margin: 0 0 20px;
+        letter-spacing: -1px;
+    }
+
+    .hero-headline-accent {
+        background: linear-gradient(135deg, #594AE2, #C084FC);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .hero-sub {
+        font-size: 1.05rem;
+        line-height: 1.8;
+        max-width: 600px;
+        opacity: 0.7;
+        margin: 0 0 36px;
+    }
+
+    .hero-ctas {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-bottom: 16px;
+    }
+
+    .hero-note {
+        font-size: 0.78rem;
+        opacity: 0.45;
+        margin: 0;
+    }
+
+    .hero-scroll-hint {
+        position: absolute;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+        animation: bounce 2s ease-in-out infinite;
+    }
+
+    @@keyframes bounce {
+        0%, 100% { transform: translateX(-50%) translateY(0); }
+        50%       { transform: translateX(-50%) translateY(8px); }
+    }
+
+    /* ─── Stats ──────────────────────────────── */
+    .stats-section {
+        padding: 40px 0;
+        border-top: 1px solid rgba(128,128,128,0.1);
+        border-bottom: 1px solid rgba(128,128,128,0.1);
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        text-align: center;
+    }
+
+    .stat-item {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #594AE2, #8B5CF6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .stat-label {
+        font-size: 0.85rem;
+        opacity: 0.6;
+    }
+
+    /* ─── Section Badges & Titles ────────────── */
+    .section-badge {
+        display: inline-block;
+        background: rgba(89, 74, 226, 0.1);
+        color: #594AE2;
+        padding: 5px 16px;
+        border-radius: 32px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        margin-bottom: 16px;
+        border: 1px solid rgba(89, 74, 226, 0.2);
+    }
+
+    .section-badge-writer {
+        background: rgba(124, 58, 237, 0.1);
+        color: #7C3AED;
+        border-color: rgba(124, 58, 237, 0.2);
+    }
+
+    .section-badge-how {
+        background: rgba(16, 185, 129, 0.1);
+        color: #059669;
+        border-color: rgba(16, 185, 129, 0.2);
+    }
+
+    .section-title {
+        font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+        font-weight: 800;
+        line-height: 1.2;
+        margin: 0 0 12px;
+        letter-spacing: -0.5px;
+    }
+
+    .section-sub {
+        font-size: 1rem;
+        opacity: 0.65;
+        max-width: 560px;
+        line-height: 1.7;
+        margin: 0 0 48px;
+    }
+
+    .section-divider {
+        height: 1px;
+        background: linear-gradient(to left, transparent, rgba(128,128,128,0.15), transparent);
+        margin: 0 48px;
+    }
+
+    /* ─── Features ───────────────────────────── */
+    .features-section {
+        padding: 80px 0;
+    }
+
+    .features-section-alt {
+        padding: 80px 0;
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 24px;
+    }
+
+    .feature-card {
+        padding: 32px 28px;
+        border-radius: 20px;
+        border: 1px solid rgba(128,128,128,0.1);
+        background: rgba(128,128,128,0.02);
+        transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        cursor: default;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 20px 40px rgba(89, 74, 226, 0.1);
+        border-color: rgba(89, 74, 226, 0.25);
+    }
+
+    .feature-icon-wrap {
+        width: 52px;
+        height: 52px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .feature-icon-reader {
+        background: rgba(89, 74, 226, 0.1);
+    }
+
+    .feature-icon-writer {
+        background: rgba(124, 58, 237, 0.1);
+    }
+
+    .feature-title {
+        font-size: 1.05rem;
+        font-weight: 700;
+        margin: 0 0 10px;
+        line-height: 1.3;
+    }
+
+    .feature-desc {
+        font-size: 0.9rem;
+        opacity: 0.65;
+        line-height: 1.7;
+        margin: 0;
+    }
+
+    /* ─── How It Works ───────────────────────── */
+    .how-section {
+        padding: 80px 0;
+        background: rgba(89, 74, 226, 0.03);
+    }
+
+    .steps-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 32px;
+        position: relative;
+    }
+
+    .step-card {
+        padding: 36px 28px;
+        border-radius: 20px;
+        text-align: center;
+        position: relative;
+    }
+
+    .step-number {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #594AE2, #8B5CF6);
+        color: white;
+        font-size: 1.4rem;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        box-shadow: 0 8px 20px rgba(89, 74, 226, 0.3);
+    }
+
+    /* ─── Topics ─────────────────────────────── */
+    .topics-section {
+        padding: 72px 0;
+    }
+
+    .topics-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+        margin-top: 40px;
+    }
+
+    .topic-chip {
+        display: inline-flex;
+        align-items: center;
+        padding: 10px 20px;
+        border-radius: 32px;
+        border: 1px solid rgba(128,128,128,0.15);
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background: rgba(128,128,128,0.03);
+    }
+
+    .topic-chip:hover {
+        border-color: #594AE2;
+        color: #594AE2;
+        background: rgba(89, 74, 226, 0.07);
+        transform: translateY(-2px);
+    }
+
+    /* ─── Final CTA ──────────────────────────── */
+    .cta-section {
+        padding: 100px 24px;
+        background: linear-gradient(135deg, #594AE2 0%, #7C3AED 50%, #8B5CF6 100%);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .cta-glow {
+        position: absolute;
+        width: 600px;
+        height: 600px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.07);
+        top: -200px;
+        left: 50%;
+        transform: translateX(-50%);
+        pointer-events: none;
+    }
+
+    .cta-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .cta-title {
+        font-size: clamp(1.8rem, 4vw, 3rem);
+        font-weight: 800;
+        color: #ffffff;
+        margin: 0 0 16px;
+        letter-spacing: -0.5px;
+    }
+
+    .cta-sub {
+        font-size: 1rem;
+        color: rgba(255,255,255,0.8);
+        max-width: 520px;
+        margin: 0 auto 40px;
+        line-height: 1.8;
+    }
+
+    /* ─── Footer ─────────────────────────────── */
+    .landing-footer {
+        padding: 48px 24px 32px;
+        border-top: 1px solid rgba(128,128,128,0.1);
+        text-align: center;
+    }
+
+    .footer-inner {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .footer-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 24px;
+        justify-content: center;
+    }
+
+    .footer-link {
+        font-size: 0.85rem;
+        opacity: 0.55;
+        text-decoration: none;
+        color: inherit;
+        transition: opacity 0.2s;
+    }
+
+    .footer-link:hover {
+        opacity: 1;
+    }
+
+    /* ─── Responsive ─────────────────────────── */
+    @@media (max-width: 600px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .hero-ctas {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .features-grid,
+        .steps-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .section-sub {
+            max-width: 100%;
+        }
+    }
+</style>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        if (authState.User.Identity?.IsAuthenticated == true)
+        {
+            Nav.NavigateTo("/feed", replace: true);
+        }
+    }
+
+    // ── Data ─────────────────────────────────────────────────────────────────
+
+    private record StatItem(string Number, string Label);
+    private record FeatureItem(string Icon, string Title, string Description);
+    private record StepItem(string Title, string Description);
+    private record TopicItem(string Icon, string Name);
+    private record FooterLink(string Href, string Label);
+
+    private readonly List<StatItem> _stats =
+    [
+        new("100%", "ދިވެހި ބަހުން"),
+        new("ހިލޭ", "ފެށޭ"),
+        new("RTL", "ފެންވަރު ހިމެނޭ")
+    ];
+
+    private readonly List<FeatureItem> _readerFeatures =
+    [
+        new(
+            LucideIcons.BookOpen,
+            "ދިވެހި ލިޔުންތައް ކިޔާ",
+            "ތިމާވެށި، ސައިންސް، ތާރީޚް، ސިހަ، ފިލްމު — ތަފާތު ދާއިރާތަކުން ގިނަ ލިޔުންތައް ތިބާ ކުރިމަތީ."
+        ),
+        new(
+            LucideIcons.UserPlus,
+            "ލިޔުންތެރިން ފޮލޯ ކުރޭ",
+            "ތިބާ ރުހޭ ލިޔުންތެރިން ފޮލޯ ކޮށް، ލިޔުންތައް ސީދާ ތިބާ ފީޑަށް ލިބޭ ގޮތް ހަދާ."
+        ),
+        new(
+            LucideIcons.Sparkles,
+            "ތިބާއަށް ހާއްސަ",
+            "ތިބާ ކިޔާ ދާއިރާތަކަށް ބިނާ ކޮށް، ހަމައެކަނި ތިބާ ހިތް ލިބޭ ލިޔުންތައް ދައްކާ."
+        )
+    ];
+
+    private readonly List<FeatureItem> _writerFeatures =
+    [
+        new(
+            LucideIcons.PenLine,
+            "ފަސޭހަ ދިވެހި ލިޔުން",
+            "RTL ސަޕޯޓް ހިމެނޭ، ދިވެހި ތަކެތި ލިޔަން ހާއްސަ ކޮށް ތައްޔާރު ކުރެވިފައިވާ ލިޔުމުގެ ވަސީލަތެއް."
+        ),
+        new(
+            LucideIcons.Globe,
+            "ހިއްސާ ކޮށް ޝާއިއު ކުރޭ",
+            "ލިޔުން ތައްޔާރު ވީ ހިނދު ދިވެހި ކިޔުންތެރިންނަށް ވަގުތުން ހިއްސާ ކޮށްލާ."
+        ),
+        new(
+            LucideIcons.Users,
+            "ކިޔުންތެރިން ހޯދާ",
+            "ތިބާ ލިޔުުން ހިތްވަރު ދިން ކިޔުންތެރިން ހޯދައި ތިބާ ލިޔުުމުގެ ދުނިޔެ ތަރައްގީ ކުރޭ."
+        )
+    ];
+
+    private readonly List<StepItem> _steps =
+    [
+        new(
+            "ރަޖިސްޓްރީ ވޭ",
+            "ލިޔުންތެރިއެއް ގޮތުގައި ނޫނީ ކިޔުންތެރިއެއް ގޮތުގައި، ހިލޭ، ހަމަ ދެ ސިކުންތު ތެރޭ."
+        ),
+        new(
+            "ހޯދާ ނޫނީ ލިޔޭ",
+            "ތިބާ ބޭނުންވާ ލިޔުންތައް ހޯދާ. ނޫނީ ތިބާ ހިތުގައިވާ ވާހަކަ ލިޔަން ފަށާ."
+        ),
+        new(
+            "ގުޅިތިބޭ",
+            "ލިޔުުން ހިއްސާ ކޮށް، ކިޔުންތެރިންނާ ވާހަކަ ދައްކާ، ދިވެހި ލިޔުންތެރިކަން ކުރިއަރުވާ."
+        )
+    ];
+
+    private readonly List<TopicItem> _topics =
+    [
+        new(LucideIcons.Leaf,           "ތިމާވެށި"),
+        new(LucideIcons.FlaskConical,   "ސައިންސް"),
+        new(LucideIcons.Palette,        "ފަންނު"),
+        new(LucideIcons.Film,           "ފިލްމު"),
+        new(LucideIcons.ScrollText,     "ތާރީހު"),
+        new(LucideIcons.Book,           "ދީން"),
+        new(LucideIcons.HeartPulse,     "ސިހަ"),
+        new(LucideIcons.GraduationCap,  "ތައުލީމު"),
+        new(LucideIcons.MapPin,         "ދަތުރު"),
+        new(LucideIcons.Briefcase,      "ވިޔަފާރި")
+    ];
+
+    private readonly List<FooterLink> _footerLinks =
+    [
+        new("/", "ފުރަތަމަ ސަފްހާ"),
+        new("#",  "ލިޔުުންތެރިންނަށް"),
+        new("#",  "ޕްރައިވަސީ"),
+        new("#",  "ޤަވާއިދު"),
+        new("#",  "ގުުޅުން")
+    ];
+}

@@ -2,23 +2,26 @@
 @using MudBlazor
 
 <div class="my-stories-page">
-    <MudText Typo="Typo.h4" GutterBottom="true">އަހަރެންގެ ލިޔުންތައް</MudText>
+    <MudText Typo="Typo.h4" GutterBottom="true" Style="font-weight: 800;">އަހަރެންގެ ލިޔުންތައް</MudText>
 
-    <MudTabs Elevation="2" Rounded="true" PanelClass="mt-4">
+    <MudTabs Elevation="0" Rounded="true" PanelClass="mt-4">
         <MudTabPanel Text="ޑްރާފްޓްސް">
             <MudGrid>
                 @for (int i = 1; i <= 3; i++)
                 {
                     <MudItem xs="12" sm="6" md="4">
-                        <MudCard Outlined="true">
+                        <MudCard Elevation="0" Style="border-radius: 16px; border: 1px solid rgba(128,128,128,0.1);">
                             <MudCardContent>
-                                <MudText Typo="Typo.h6">ޑްރާފްޓް ލިޔުން @i</MudText>
+                                <MudText Typo="Typo.h6" Style="font-weight: 700;">ޑްރާފްޓް ލިޔުން @i</MudText>
                                 <MudText Typo="Typo.body2" Color="Color.Secondary">ތައްޔާރުކުރަމުން ދަނީ</MudText>
                             </MudCardContent>
                             <MudCardActions>
-                                <MudButton Variant="Variant.Text" Color="Color.Primary">އިސްލާހުކުރައްވާ</MudButton>
-                                <MudButton Variant="Variant.Text" Color="Color.Success">ޕަބްލިޝްކުރައްވާ</MudButton>
-                                <MudButton Variant="Variant.Text" Color="Color.Error">ފޮހެލައްވާ</MudButton>
+                                <MudButton Variant="Variant.Text" Color="Color.Primary"
+                                           Style="border-radius: 999px;">އިސްލާހުކުރައްވާ</MudButton>
+                                <MudButton Variant="Variant.Text" Color="Color.Success"
+                                           Style="border-radius: 999px;">ޕަބްލިޝްކުރައްވާ</MudButton>
+                                <MudButton Variant="Variant.Text" Color="Color.Error"
+                                           Style="border-radius: 999px;">ފޮހެލައްވާ</MudButton>
                             </MudCardActions>
                         </MudCard>
                     </MudItem>
@@ -30,14 +33,16 @@
                 @for (int i = 1; i <= 2; i++)
                 {
                     <MudItem xs="12" sm="6" md="4">
-                        <MudCard Outlined="true">
+                        <MudCard Elevation="0" Style="border-radius: 16px; border: 1px solid rgba(128,128,128,0.1);">
                             <MudCardContent>
-                                <MudText Typo="Typo.h6">ޝެޑިއުލްކުރެވިފައިވާ ލިޔުން @i</MudText>
+                                <MudText Typo="Typo.h6" Style="font-weight: 700;">ޝެޑިއުލްކުރެވިފައިވާ ލިޔުން @i</MudText>
                                 <MudText Typo="Typo.body2" Color="Color.Secondary">ޕަބްލިޝްކުރާނެ ތާރީޚް: 25 ޖެނުއަރީ 2026</MudText>
                             </MudCardContent>
                             <MudCardActions>
-                                <MudButton Variant="Variant.Text" Color="Color.Primary">އިސްލާހުކުރައްވާ</MudButton>
-                                <MudButton Variant="Variant.Text" Color="Color.Error">ކެންސަލްކުރައްވާ</MudButton>
+                                <MudButton Variant="Variant.Text" Color="Color.Primary"
+                                           Style="border-radius: 999px;">އިސްލާހުކުރައްވާ</MudButton>
+                                <MudButton Variant="Variant.Text" Color="Color.Error"
+                                           Style="border-radius: 999px;">ކެންސަލްކުރައްވާ</MudButton>
                             </MudCardActions>
                         </MudCard>
                     </MudItem>
@@ -49,14 +54,16 @@
                 @for (int i = 1; i <= 5; i++)
                 {
                     <MudItem xs="12" sm="6" md="4">
-                        <MudCard Outlined="true">
+                        <MudCard Elevation="0" Style="border-radius: 16px; border: 1px solid rgba(128,128,128,0.1);">
                             <MudCardContent>
-                                <MudText Typo="Typo.h6">ޕަބްލިޝްކުރެވިފައިވާ ލިޔުން @i</MudText>
+                                <MudText Typo="Typo.h6" Style="font-weight: 700;">ޕަބްލިޝްކުރެވިފައިވާ ލިޔުން @i</MudText>
                                 <MudText Typo="Typo.body2" Color="Color.Secondary">ޕަބްލިޝްކުރި ތާރީޚް: 20 ޖެނުއަރީ 2026</MudText>
                             </MudCardContent>
                             <MudCardActions>
-                                <MudButton Variant="Variant.Text" Color="Color.Primary">ބައްލަވާ</MudButton>
-                                <MudButton Variant="Variant.Text" Color="Color.Warning">އަންލިސްޓްކުރައްވާ</MudButton>
+                                <MudButton Variant="Variant.Text" Color="Color.Primary"
+                                           Style="border-radius: 999px;">ބައްލަވާ</MudButton>
+                                <MudButton Variant="Variant.Text" Color="Color.Warning"
+                                           Style="border-radius: 999px;">އަންލިސްޓްކުރައްވާ</MudButton>
                             </MudCardActions>
                         </MudCard>
                     </MudItem>
@@ -68,14 +75,16 @@
                 @for (int i = 1; i <= 1; i++)
                 {
                     <MudItem xs="12" sm="6" md="4">
-                        <MudCard Outlined="true">
+                        <MudCard Elevation="0" Style="border-radius: 16px; border: 1px solid rgba(128,128,128,0.1);">
                             <MudCardContent>
-                                <MudText Typo="Typo.h6">އަންލިސްޓް ލިޔުން @i</MudText>
+                                <MudText Typo="Typo.h6" Style="font-weight: 700;">އަންލިސްޓް ލިޔުން @i</MudText>
                                 <MudText Typo="Typo.body2" Color="Color.Secondary">އަންލިސްޓްކުރި ތާރީޚް: 18 ޖެނުއަރީ 2026</MudText>
                             </MudCardContent>
                             <MudCardActions>
-                                <MudButton Variant="Variant.Text" Color="Color.Primary">ބައްލަވާ</MudButton>
-                                <MudButton Variant="Variant.Text" Color="Color.Success">ޕަބްލިޝްކުރައްވާ</MudButton>
+                                <MudButton Variant="Variant.Text" Color="Color.Primary"
+                                           Style="border-radius: 999px;">ބައްލަވާ</MudButton>
+                                <MudButton Variant="Variant.Text" Color="Color.Success"
+                                           Style="border-radius: 999px;">ޕަބްލިޝްކުރައްވާ</MudButton>
                             </MudCardActions>
                         </MudCard>
                     </MudItem>

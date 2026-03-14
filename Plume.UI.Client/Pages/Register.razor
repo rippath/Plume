@@ -1,23 +1,25 @@
 @page "/register"
+@layout Layout.AuthLayout
 @inject IClientAuthService AuthService
 @inject NavigationManager Navigation
 @inject ISnackbar Snackbar
 
 <PageTitle>ރަޖިސްޓްރީ</PageTitle>
 
-<MudGrid Justify="Justify.Center" Class="mt-16">
+<MudGrid Justify="Justify.Center">
     <MudItem xs="12" sm="8" md="5">
-        <MudPaper Class="pa-4" Elevation="3">
-            <MudText Typo="Typo.h5" GutterBottom="true">ރަޖިސްޓްރީ ކުރައްވާ</MudText>
+        <MudPaper Class="pa-6" Elevation="0"
+                  Style="border-radius: 24px; border: 1px solid rgba(128,128,128,0.12);">
+            <MudText Typo="Typo.h5" GutterBottom="true" Style="font-weight: 800;">ރަޖިސްޓްރީ ކުރައްވާ</MudText>
 
             @if (!string.IsNullOrEmpty(_errorMessage))
             {
-                <MudAlert Severity="Severity.Error" Class="mb-4">@_errorMessage</MudAlert>
+                <MudAlert Severity="Severity.Error" Class="mb-4" Style="border-radius: 12px;">@_errorMessage</MudAlert>
             }
 
             @if (_errors.Any())
             {
-                <MudAlert Severity="Severity.Error" Class="mb-4">
+                <MudAlert Severity="Severity.Error" Class="mb-4" Style="border-radius: 12px;">
                     <ul>
                         @foreach (var error in _errors)
                         {
@@ -35,6 +37,7 @@
                               Required="true"
                               RequiredError="ޔޫޒާ ނަން ބޭނުންވެއެވެ."
                               Disabled="_isLoading"
+                              Variant="Variant.Outlined"
                               HelperText="3-100 އަކުރު" />
 
                 <MudTextField T="string"
@@ -42,6 +45,7 @@
                               @bind-Value="_model.DisplayName"
                               For="@(() => _model.DisplayName)"
                               Disabled="_isLoading"
+                              Variant="Variant.Outlined"
                               HelperText="އެހެން މީހުންނަށް ފެންނާނީ މި ނަން" />
 
                 <MudTextField T="string"
@@ -51,7 +55,8 @@
                               Required="true"
                               RequiredError="އީމެއިލް ބޭނުންވެއެވެ."
                               InputType="InputType.Email"
-                              Disabled="_isLoading" />
+                              Disabled="_isLoading"
+                              Variant="Variant.Outlined" />
 
                 <MudTextField T="string"
                               Label="ޕާސްވޯޑް"
@@ -61,6 +66,7 @@
                               Required="true"
                               RequiredError="ޕާސްވޯޑް ބޭނުންވެއެވެ."
                               Disabled="_isLoading"
+                              Variant="Variant.Outlined"
                               HelperText="މަދުވެގެން 8 އަކުރު، ބޮޑު އަކުރެއް، ކުޑަ އަކުރެއް، ނަންބަރެއް" />
 
                 <MudTextField T="string"
@@ -70,14 +76,16 @@
                               InputType="InputType.Password"
                               Required="true"
                               RequiredError="ޕާސްވޯޑް ޔަޤީންކުރައްވާ."
-                              Disabled="_isLoading" />
+                              Disabled="_isLoading"
+                              Variant="Variant.Outlined" />
 
                 <MudButton Variant="Variant.Filled"
                            Color="Color.Primary"
                            OnClick="HandleRegister"
                            Disabled="@(!_isValid || _isLoading)"
                            Class="mt-4"
-                           FullWidth="true">
+                           FullWidth="true"
+                           Style="border-radius: 999px; padding: 10px 0; font-weight: 700;">
                     @if (_isLoading)
                     {
                         <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="mr-2" />
@@ -93,7 +101,8 @@
                        Color="Color.Default"
                        OnClick="RegisterWithGoogle"
                        FullWidth="true"
-                       Disabled="_isLoading">
+                       Disabled="_isLoading"
+                       Style="border-radius: 999px; padding: 10px 0;">
                 ގޫގަލް އިން ރަޖިސްޓްރީ ކުރައްވާ
             </MudButton>
 

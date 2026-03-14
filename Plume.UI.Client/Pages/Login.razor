@@ -1,9 +1,13 @@
 @page "/login"
+@layout Layout.AuthLayout
 @using Plume.UI.Client.Components.Authentication
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager Navigation
 
 <PageTitle>ސައިން-އިން</PageTitle>
 
-<MudGrid Justify="Justify.Center" Class="mt-16">
+<MudGrid Justify="Justify.Center">
     <MudItem xs="12" sm="8" md="4">
         <LoginComponent RedirectUrl="@GetRedirectUrl()" />
     </MudItem>
@@ -13,8 +17,17 @@
     [SupplyParameterFromQuery]
     public string? ReturnUrl { get; set; }
 
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        if (authState.User.Identity?.IsAuthenticated == true)
+        {
+            Navigation.NavigateTo(GetRedirectUrl(), replace: true);
+        }
+    }
+
     private string GetRedirectUrl()
     {
-        return string.IsNullOrEmpty(ReturnUrl) ? "/" : Uri.UnescapeDataString(ReturnUrl);
+        return string.IsNullOrEmpty(ReturnUrl) ? "/feed" : Uri.UnescapeDataString(ReturnUrl);
     }
 }
