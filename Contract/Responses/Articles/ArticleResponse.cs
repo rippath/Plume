@@ -6,4 +6,8 @@ public class ArticleResponse
     public string Title { get; init; } = string.Empty;
     public string Slug { get; init; } = string.Empty;
     public string Status { get; init; } = string.Empty;
+    public string? Content { get; init; }
+    public string? FeaturedImageUrl { get; init; }
+    public DateTime? PublishedAt { get; init; }
+    public DateTime? UpdatedDate { get; init; }
 }

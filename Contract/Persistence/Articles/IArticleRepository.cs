@@ -10,4 +10,5 @@ public interface IArticleRepository
     Task<bool> DeleteByIdAsync(Guid id, CancellationToken cancellationToken = default);
     Task<bool> ExistsByIdAsync(Guid id, CancellationToken cancellationToken = default);
     Task<bool> ExistsBySlugAsync(string slug, CancellationToken cancellationToken = default);
+    Task<List<Article>> GetAllByAuthorIdAsync(Guid authorId, CancellationToken cancellationToken = default);
 }

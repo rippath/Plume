@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.Extensions.FileProviders;
 using MudBlazor.Services;
 using Plume.Application;
 using Plume.Identity;
@@ -71,6 +72,16 @@ app.UseAuthorization();
 app.UseAntiforgery();
 
 app.MapStaticAssets();
+
+// Serve user-uploaded files from outside wwwroot so the dev file-watcher
+// doesn't trigger a hot-reload on every upload.
+var uploadsRoot = Path.Combine(builder.Environment.ContentRootPath, "uploads");
+Directory.CreateDirectory(uploadsRoot);
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(uploadsRoot),
+    RequestPath = "/uploads"
+});
 
 // Map API controllers
 app.MapControllers();

@@ -42,4 +42,9 @@ public class ArticleService : IArticleService
     {
         return await _articleRepository.DeleteByIdAsync(id, cancellationToken);
     }
+
+    public async Task<List<Article>> GetAllByAuthorIdAsync(Guid authorId, CancellationToken cancellationToken = default)
+    {
+        return await _articleRepository.GetAllByAuthorIdAsync(authorId, cancellationToken);
+    }
 }

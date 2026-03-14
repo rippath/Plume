@@ -20,7 +20,9 @@ public static class ArticleMapping
             Status = request.Publish ? ArticleStatus.Published : ArticleStatus.Draft,
             PublishedAt = request.Publish ? DateTime.UtcNow : null,
             IsRightToLeft = true,
-            LanguageCode = "dv"
+            LanguageCode = "dv",
+            FeaturedImageUrl = request.FeaturedImageUrl,
+            FeaturedImageAlt = request.FeaturedImageAlt
         };
     }
 
@@ -31,8 +33,21 @@ public static class ArticleMapping
             Id = article.Id,
             Title = article.Title,
             Slug = article.Slug,
-            Status = article.Status.ToString()
+            Status = article.Status.ToString(),
+            Content = article.Content,
+            FeaturedImageUrl = article.FeaturedImageUrl,
+            PublishedAt = article.PublishedAt,
+            UpdatedDate = article.UpdatedDate
         };
+    }
+
+    public static Article ApplyUpdate(this UpdateArticleRequest request, Article article)
+    {
+        article.Title = request.Title.Trim();
+        article.Content = request.Content;
+        article.FeaturedImageUrl = request.FeaturedImageUrl;
+        article.FeaturedImageAlt = request.FeaturedImageAlt;
+        return article;
     }
 
     public static string GenerateSlug(string title)

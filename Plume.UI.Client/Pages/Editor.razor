@@ -1,10 +1,13 @@
 @page "/editor"
+@page "/editor/{Id:guid}"
 @implements IDisposable
 @using System.Net.Http.Headers
 @using System.Net.Http.Json
+@using System.Text.Json
 @using Contract.Requests.Articles
 @using Contract.Responses.Articles
 @using Contract.Common
+@using Microsoft.AspNetCore.Components.Forms
 @using Plume.UI.Client.Auth
 @using Plume.UI.Client.Components
 @using Plume.UI.Client.Models
@@ -12,6 +15,50 @@
 @inject IClientAuthService AuthService
 @inject IJSRuntime JSRuntime
 @inject ISnackbar Snackbar
+@inject IDialogService DialogService
+
+<InputFile id="featuredImageInput"
+           style="display:none"
+           accept="image/jpeg,image/png,image/webp,image/gif"
+           OnChange="UploadFeaturedImageAsync" />
+
+<div class="mb-4">
+    @if (!string.IsNullOrEmpty(_featuredImageUrl))
+    {
+        <div style="position: relative;">
+            <img src="@_featuredImageUrl"
+                 alt="Featured image"
+                 style="width: 100%; max-height: 380px; object-fit: cover; border-radius: 8px;" />
+            <MudIconButton Icon="@Icons.Material.Filled.Close"
+                           Color="Color.Error"
+                           Variant="Variant.Filled"
+                           Size="Size.Small"
+                           Style="position: absolute; top: 8px; right: 8px;"
+                           OnClick="@(() => _featuredImageUrl = null)" />
+        </div>
+    }
+    else
+    {
+        <label for="featuredImageInput" style="display: block; cursor: pointer;">
+            <MudPaper Outlined="true"
+                      Class="pa-6 d-flex flex-column align-center justify-center"
+                      Style="min-height: 120px; border-style: dashed;">
+                @if (_isUploadingImage)
+                {
+                    <MudProgressCircular Indeterminate="true" Size="Size.Medium" Color="Color.Primary" />
+                }
+                else
+                {
+                    <MudIcon Icon="@Icons.Material.Outlined.AddPhotoAlternate"
+                             Size="Size.Large"
+                             Color="Color.Secondary"
+                             Class="mb-2" />
+                    <MudText Typo="Typo.body2" Color="Color.Secondary">ފީޗަރ ފޮޓޯ</MudText>
+                }
+            </MudPaper>
+        </label>
+    }
+</div>
 
 <div id="title-field-wrapper" class="mb-4">
     <MudTextField @bind-Value="_title"
@@ -24,7 +71,14 @@
 </div>
 
 <div class="mb-4">
-    <EditorJs @ref="_editorRef" Config="@_editorConfig" OnSavedJson="HandleSaved" />
+    @if (_isReady)
+    {
+        <EditorJs @ref="_editorRef" Config="@_editorConfig" OnSavedJson="HandleSaved" OnPreviewRequested="HandlePreviewRequestedAsync" />
+    }
+    else
+    {
+        <MudProgressLinear Indeterminate="true" Color="Color.Primary" />
+    }
 </div>
 
 <style>
@@ -34,15 +88,20 @@
 </style>
 @code {
 
+    [Parameter] public Guid? Id { get; set; }
+
     private EditorJs? _editorRef;
     private DotNetObjectReference<Editor>? _dotNetRef;
     private string _title = string.Empty;
+    private string? _featuredImageUrl;
+    private bool _isUploadingImage;
     private bool _isPublishing;
     private bool _isSaving;
+    private bool _isReady;
 
     private EditorJsConfig _editorConfig = new();
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         _editorConfig = new EditorJsConfig
         {
@@ -56,25 +115,107 @@
                 { "linkTool", new EditorToolConfig { Class = "LinkTool", Config = new { endpoint = "/api/link/fetchUrl" } } },
                 { "table", new EditorToolConfig { Class = "Table", InlineToolbar = true, Config = new { rows = 2, cols = 3 } } },
                 { "code", new EditorToolConfig { Class = "CodeTool" } },
-                { "image", new EditorToolConfig { Class = "SimpleImage" } },
+                { "image", new EditorToolConfig { Class = "ImageTool", Config = new { _uploadEndpoint = "/api/media/articles/editorjs-image" } } },
                 { "embed", new EditorToolConfig { Class = "EmbedTool", Config = new {
                     services = new {
                         youtube = new { height = 400, width = 600 }
                     }
                 } } },
                 { "fontFamily", new EditorToolConfig { Class = "FontFamily" } },
-                { "fontSize", new EditorToolConfig { Class = "FontSize" } }
+                { "fontSize", new EditorToolConfig { Class = "FontSize" } },
+                { "marker", new EditorToolConfig { Class = "Marker" } }
             },
             InlineToolbar = new[] { "fontFamily", "fontSize", "bold", "link", "marker", "italic" },
             I18n = new I18nConfig { Direction = "rtl" },
             Autofocus = true,
             Data = new {
                 blocks = new object[] {
-                    // new { type = "header", data = new { text = "", level = 2 } },
                     new { type = "paragraph", data = new { text = "" } }
                 }
             }
         };
+
+        if (Id.HasValue)
+        {
+            await LoadArticleAsync(Id.Value);
+        }
+
+        _isReady = true;
+    }
+
+    private async Task LoadArticleAsync(Guid articleId)
+    {
+        try
+        {
+            var token = await AuthService.GetAccessTokenAsync();
+            if (string.IsNullOrEmpty(token)) return;
+
+            using var request = new HttpRequestMessage(HttpMethod.Get, $"api/articles/me/{articleId}");
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var httpResponse = await Http.SendAsync(request);
+            var result = await httpResponse.Content.ReadFromJsonAsync<Response<ArticleResponse>>();
+
+            if (result?.Success == true && result.Data is not null)
+            {
+                _title = result.Data.Title;
+                _featuredImageUrl = result.Data.FeaturedImageUrl;
+
+                if (!string.IsNullOrEmpty(result.Data.Content))
+                {
+                    _editorConfig.Data = JsonSerializer.Deserialize<JsonElement>(result.Data.Content);
+                }
+            }
+            else
+            {
+                Snackbar.Add(result?.Message ?? "ލިޔުން ލޯޑުކުރެވޭ ވަރެއް ނުވި.", Severity.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Error: {ex.Message}", Severity.Error);
+        }
+    }
+
+    private async Task UploadFeaturedImageAsync(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file is null) return;
+
+        _isUploadingImage = true;
+        StateHasChanged();
+
+        try
+        {
+            var token = await AuthService.GetAccessTokenAsync();
+            if (string.IsNullOrEmpty(token)) return;
+
+            using var content = new MultipartFormDataContent();
+            var streamContent = new StreamContent(file.OpenReadStream(maxAllowedSize: 5 * 1024 * 1024));
+            streamContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+            content.Add(streamContent, "file", file.Name);
+
+            using var request = new HttpRequestMessage(HttpMethod.Post, "api/media/articles/image");
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            request.Content = content;
+
+            var httpResponse = await Http.SendAsync(request);
+            var result = await httpResponse.Content.ReadFromJsonAsync<Response<string>>();
+
+            if (result?.Success == true && result.Data is not null)
+                _featuredImageUrl = result.Data;
+            else
+                Snackbar.Add(result?.Message ?? "ފޮޓޯ އަޕްލޯޑު ކުރެވޭ ވަރެއް ނުވި.", Severity.Error);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Error: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            _isUploadingImage = false;
+            StateHasChanged();
+        }
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -86,7 +227,7 @@
             await JSRuntime.InvokeVoidAsync("dhivehi.setupDhivehiInput", "title-field-wrapper", _dotNetRef);
         }
     }
-    
+
     [JSInvokable]
     public void UpdateTitle(string value)
     {
@@ -95,6 +236,24 @@
     }
 
     public void Dispose() => _dotNetRef?.Dispose();
+
+    private async Task HandlePreviewRequestedAsync(string json)
+    {
+        var parameters = new DialogParameters<ArticlePreviewDialog>
+        {
+            { x => x.Title, _title },
+            { x => x.FeaturedImageUrl, _featuredImageUrl },
+            { x => x.ContentJson, json }
+        };
+        var options = new DialogOptions
+        {
+            MaxWidth = MaxWidth.Large,
+            FullWidth = true,
+            CloseButton = true,
+            CloseOnEscapeKey = true
+        };
+        await DialogService.ShowAsync<ArticlePreviewDialog>("ޕްރިވިއު", parameters, options);
+    }
 
     private async Task HandleSaved(string json)
     {
@@ -117,26 +276,51 @@
                 return;
             }
 
-            using var request = new HttpRequestMessage(HttpMethod.Post, "api/articles/me");
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            request.Content = JsonContent.Create(new CreateArticleRequest
+            if (Id.HasValue)
             {
-                Title = _title,
-                Content = json,
-                Publish = _isPublishing
-            });
+                // Update existing article
+                using var request = new HttpRequestMessage(HttpMethod.Put, $"api/articles/me/{Id.Value}");
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                request.Content = JsonContent.Create(new UpdateArticleRequest
+                {
+                    Title = _title,
+                    Content = json,
+                    FeaturedImageUrl = _featuredImageUrl
+                });
 
-            var httpResponse = await Http.SendAsync(request);
-            var result = await httpResponse.Content.ReadFromJsonAsync<Response<ArticleResponse>>();
+                var httpResponse = await Http.SendAsync(request);
+                var result = await httpResponse.Content.ReadFromJsonAsync<Response<ArticleResponse>>();
 
-            if (result?.Success == true)
-            {
-                var message = _isPublishing ? "ލިޔުން ޝާއިއު ކުރެވިއްޖެ!" : "ލިޔުން ރައްކާ ކުރެވިއްޖެ!";
-                Snackbar.Add(message, Severity.Success);
+                Snackbar.Add(result?.Success == true
+                    ? "ލިޔުން ރައްކާ ކުރެވިއްޖެ!"
+                    : result?.Message ?? "ލިޔުން ރައްކާ ކުރެވޭ ވަރެއް ނުވި.",
+                    result?.Success == true ? Severity.Success : Severity.Error);
             }
             else
             {
-                Snackbar.Add(result?.Message ?? "ލިޔުން ރައްކާ ކުރެވޭ ވަރެއް ނުވި.", Severity.Error);
+                // Create new article
+                using var request = new HttpRequestMessage(HttpMethod.Post, "api/articles/me");
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                request.Content = JsonContent.Create(new CreateArticleRequest
+                {
+                    Title = _title,
+                    Content = json,
+                    Publish = _isPublishing,
+                    FeaturedImageUrl = _featuredImageUrl
+                });
+
+                var httpResponse = await Http.SendAsync(request);
+                var result = await httpResponse.Content.ReadFromJsonAsync<Response<ArticleResponse>>();
+
+                if (result?.Success == true)
+                {
+                    var message = _isPublishing ? "ލިޔުން ޝާއިއު ކުރެވިއްޖެ!" : "ލިޔުން ރައްކާ ކުރެވިއްޖެ!";
+                    Snackbar.Add(message, Severity.Success);
+                }
+                else
+                {
+                    Snackbar.Add(result?.Message ?? "ލިޔުން ރައްކާ ކުރެވޭ ވަރެއް ނުވި.", Severity.Error);
+                }
             }
         }
         catch (Exception ex)

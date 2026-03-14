@@ -1,6 +1,7 @@
 using Contract.Persistence.Articles;
 using Microsoft.EntityFrameworkCore;
 using Plume.Domain.Entities.Articles;
+using Plume.Domain.Enums;
 
 namespace Plume.Persistence.Repositories;
 
@@ -55,5 +56,14 @@ public class ArticleRepository : IArticleRepository
     public async Task<bool> ExistsBySlugAsync(string slug, CancellationToken cancellationToken = default)
     {
         return await _context.Articles.AnyAsync(a => a.Slug == slug, cancellationToken);
+    }
+
+    public async Task<List<Article>> GetAllByAuthorIdAsync(Guid authorId, CancellationToken cancellationToken = default)
+    {
+        return await _context.Articles
+            .AsNoTracking()
+            .Where(a => a.AuthorId == authorId && a.Status != ArticleStatus.Deleted)
+            .OrderByDescending(a => a.UpdatedDate)
+            .ToListAsync(cancellationToken);
     }
 }

@@ -37,6 +37,30 @@
                 config.i18n.direction = config.i18n.direction || 'rtl';
             }
 
+            // Inject custom uploader for tools that declare _uploadEndpoint
+            for (const toolName in config.tools) {
+                if (!Object.prototype.hasOwnProperty.call(config.tools, toolName)) continue;
+                const toolCfg = config.tools[toolName];
+                if (toolCfg && toolCfg.config && toolCfg.config._uploadEndpoint) {
+                    const endpoint = toolCfg.config._uploadEndpoint;
+                    delete toolCfg.config._uploadEndpoint;
+                    toolCfg.config.uploader = {
+                        uploadByFile: async (file) => {
+                            const raw = localStorage.getItem('accessToken');
+                            const token = raw ? JSON.parse(raw) : null;
+                            const formData = new FormData();
+                            formData.append('image', file);
+                            const res = await fetch(endpoint, {
+                                method: 'POST',
+                                headers: token ? { 'Authorization': `Bearer ${token}` } : {},
+                                body: formData
+                            });
+                            return res.json();
+                        }
+                    };
+                }
+            }
+
             // Debug: Log tools being passed to EditorJS
             console.log('Tools config:', config.tools);
 

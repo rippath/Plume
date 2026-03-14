@@ -2,6 +2,13 @@ namespace Plume.UI;
 
 public static class EndPoints
 {
+    public static class Media
+    {
+        private const string Base = "api/media";
+        public const string UploadArticleImage = $"{Base}/articles/image";
+        public const string EditorJsImageUpload = $"{Base}/articles/editorjs-image";
+    }
+
     public static class Articles
     {
         private const string Base = "api/articles";

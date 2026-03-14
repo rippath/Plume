@@ -7,28 +7,41 @@
         <MudCardContent>
             <div id="@EditorId" class="editorjs-root"></div>
         </MudCardContent>
-        <MudCardActions Class="d-flex justify-end">
-            <MudButton
-                Class="ml-1"
-                Variant="Variant.Outlined"
-                Color="Color.Success"
-                OnClick="SaveAsync">
-                ރައްކާ ކުރޭ
-            </MudButton>
-            <MudButton 
-                Variant="Variant.Outlined" 
-                Color="Color.Error" 
-                OnClick="SaveAsync">
-                ދެން ނޫޅެން
-            </MudButton>
-        </MudCardActions>
+        @if (!ReadOnly)
+        {
+            <MudCardActions Class="d-flex justify-end">
+                <MudButton
+                    Class="ml-1"
+                    Variant="Variant.Text"
+                    Color="Color.Secondary"
+                    StartIcon="@Icons.Material.Outlined.Visibility"
+                    OnClick="RequestPreviewAsync">
+                    ޕްރިވިއު
+                </MudButton>
+                <MudButton
+                    Class="ml-1"
+                    Variant="Variant.Outlined"
+                    Color="Color.Success"
+                    OnClick="SaveAsync">
+                    ރައްކާ ކުރޭ
+                </MudButton>
+                <MudButton
+                    Variant="Variant.Outlined"
+                    Color="Color.Error"
+                    OnClick="SaveAsync">
+                    ދެން ނޫޅެން
+                </MudButton>
+            </MudCardActions>
+        }
     </MudCard>
 </div>
 
 @code {
     [Parameter] public string EditorId { get; set; } = $"editorjs-{Guid.NewGuid():N}";
-    [Parameter] public object? Config { get; set; } // pass tools or config from parent
+    [Parameter] public object? Config { get; set; }
+    [Parameter] public bool ReadOnly { get; set; }
     [Parameter] public EventCallback<string> OnSavedJson { get; set; }
+    [Parameter] public EventCallback<string> OnPreviewRequested { get; set; }
 
     private bool _initialized;
 
@@ -46,28 +59,43 @@
     {
         if (firstRender && !_initialized)
         {
-            // initialize editor
             await JS.InvokeVoidAsync("editorJsInterop.init", EditorId, Config ?? new { });
-            await JS.InvokeVoidAsync("dhivehi.setupDhivehiEditor", EditorId);
+            if (!ReadOnly)
+                await JS.InvokeVoidAsync("dhivehi.setupDhivehiEditor", EditorId);
             _initialized = true;
         }
+    }
+
+    public async Task<string> GetJsonAsync()
+    {
+        var result = await JS.InvokeAsync<object>("editorJsInterop.save", EditorId);
+        return JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = false });
     }
 
     public async Task SaveAsync()
     {
         try
         {
-            // get JSON data (object) from JS
-            var result = await JS.InvokeAsync<object>("editorJsInterop.save", EditorId);
-            // convert to JSON string
-            var json = JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true });
+            var json = await GetJsonAsync();
             await OnSavedJson.InvokeAsync(json);
-            // optional: show in console
             Console.WriteLine("Saved editor data: " + json);
         }
         catch (JSException jex)
         {
             Console.Error.WriteLine("Error saving editor: " + jex.Message);
+        }
+    }
+
+    private async Task RequestPreviewAsync()
+    {
+        try
+        {
+            var json = await GetJsonAsync();
+            await OnPreviewRequested.InvokeAsync(json);
+        }
+        catch (JSException jex)
+        {
+            Console.Error.WriteLine("Error getting editor data for preview: " + jex.Message);
         }
     }
 

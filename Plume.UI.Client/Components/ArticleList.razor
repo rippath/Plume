@@ -1,0 +1,53 @@
+@using Contract.Responses.Articles
+@using MudBlazor
+
+@if (Articles.Count == 0)
+{
+    <MudText Typo="Typo.body1" Color="Color.Secondary" Class="mt-4">@EmptyText</MudText>
+}
+else
+{
+    <MudGrid>
+        @foreach (var article in Articles)
+        {
+            <MudItem xs="12" sm="6" md="4">
+                <MudCard Elevation="0" Style="border-radius: 16px; border: 1px solid rgba(128,128,128,0.1);">
+                    @if (!string.IsNullOrEmpty(article.FeaturedImageUrl))
+                    {
+                        <MudCardMedia Image="@article.FeaturedImageUrl" Height="140" Style="border-radius: 16px 16px 0 0;" />
+                    }
+                    <MudCardContent>
+                        <MudText Typo="Typo.h6" Style="font-weight: 700;">
+                            @(string.IsNullOrWhiteSpace(article.Title) ? "(ސުރުހީ ނެތް)" : article.Title)
+                        </MudText>
+                        <MudText Typo="Typo.body2" Color="Color.Secondary">
+                            @GetDateLabel(article)
+                        </MudText>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton Variant="Variant.Text" Color="Color.Primary"
+                                   Href="@($"/editor/{article.Id}")"
+                                   Style="border-radius: 999px;">އިސްލާހުކުރައްވާ</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+        }
+    </MudGrid>
+}
+
+@code {
+
+    [Parameter, EditorRequired] public List<ArticleResponse> Articles { get; set; } = [];
+    [Parameter] public string EmptyText { get; set; } = "ލިޔުމެއް ނެތް.";
+
+    private string GetDateLabel(ArticleResponse article)
+    {
+        if (article.Status == "Published" && article.PublishedAt.HasValue)
+            return $"ޝާއިއުކުރީ: {article.PublishedAt.Value:dd MMM yyyy}";
+
+        return article.UpdatedDate.HasValue
+            ? $"އަދާހަމަ: {article.UpdatedDate.Value:dd MMM yyyy}"
+            : string.Empty;
+    }
+
+}

@@ -1,99 +1,85 @@
 @page "/my-stories"
+@using System.Net.Http.Headers
+@using System.Net.Http.Json
+@using Contract.Common
+@using Contract.Responses.Articles
 @using MudBlazor
+@using Plume.UI.Client.Auth
+@inject HttpClient Http
+@inject IClientAuthService AuthService
+@inject ISnackbar Snackbar
 
 <div class="my-stories-page">
     <MudText Typo="Typo.h4" GutterBottom="true" Style="font-weight: 800;">އަހަރެންގެ ލިޔުންތައް</MudText>
 
+    @if (_isLoading)
+    {
+        <MudProgressLinear Indeterminate="true" Color="Color.Primary" Class="mb-4" />
+    }
+
     <MudTabs Elevation="0" Rounded="true" PanelClass="mt-4">
-        <MudTabPanel Text="ޑްރާފްޓްސް">
-            <MudGrid>
-                @for (int i = 1; i <= 3; i++)
-                {
-                    <MudItem xs="12" sm="6" md="4">
-                        <MudCard Elevation="0" Style="border-radius: 16px; border: 1px solid rgba(128,128,128,0.1);">
-                            <MudCardContent>
-                                <MudText Typo="Typo.h6" Style="font-weight: 700;">ޑްރާފްޓް ލިޔުން @i</MudText>
-                                <MudText Typo="Typo.body2" Color="Color.Secondary">ތައްޔާރުކުރަމުން ދަނީ</MudText>
-                            </MudCardContent>
-                            <MudCardActions>
-                                <MudButton Variant="Variant.Text" Color="Color.Primary"
-                                           Style="border-radius: 999px;">އިސްލާހުކުރައްވާ</MudButton>
-                                <MudButton Variant="Variant.Text" Color="Color.Success"
-                                           Style="border-radius: 999px;">ޕަބްލިޝްކުރައްވާ</MudButton>
-                                <MudButton Variant="Variant.Text" Color="Color.Error"
-                                           Style="border-radius: 999px;">ފޮހެލައްވާ</MudButton>
-                            </MudCardActions>
-                        </MudCard>
-                    </MudItem>
-                }
-            </MudGrid>
+        <MudTabPanel Text="@($"ޑްރާފްޓްސް ({_drafts.Count})")">
+            <ArticleList Articles="_drafts" EmptyText="ޑްރާފްޓް ލިޔުމެއް ނެތް." />
         </MudTabPanel>
-        <MudTabPanel Text="ޝެޑިއުލްކުރެވިފައި">
-            <MudGrid>
-                @for (int i = 1; i <= 2; i++)
-                {
-                    <MudItem xs="12" sm="6" md="4">
-                        <MudCard Elevation="0" Style="border-radius: 16px; border: 1px solid rgba(128,128,128,0.1);">
-                            <MudCardContent>
-                                <MudText Typo="Typo.h6" Style="font-weight: 700;">ޝެޑިއުލްކުރެވިފައިވާ ލިޔުން @i</MudText>
-                                <MudText Typo="Typo.body2" Color="Color.Secondary">ޕަބްލިޝްކުރާނެ ތާރީޚް: 25 ޖެނުއަރީ 2026</MudText>
-                            </MudCardContent>
-                            <MudCardActions>
-                                <MudButton Variant="Variant.Text" Color="Color.Primary"
-                                           Style="border-radius: 999px;">އިސްލާހުކުރައްވާ</MudButton>
-                                <MudButton Variant="Variant.Text" Color="Color.Error"
-                                           Style="border-radius: 999px;">ކެންސަލްކުރައްވާ</MudButton>
-                            </MudCardActions>
-                        </MudCard>
-                    </MudItem>
-                }
-            </MudGrid>
+        <MudTabPanel Text="@($"ޕަބްލިޝްކުރެވިފައި ({_published.Count})")">
+            <ArticleList Articles="_published" EmptyText="ޕަބްލިޝްކުރެވިފައިވާ ލިޔުމެއް ނެތް." />
         </MudTabPanel>
-        <MudTabPanel Text="ޕަބްލިޝްކުރެވިފައި">
-            <MudGrid>
-                @for (int i = 1; i <= 5; i++)
-                {
-                    <MudItem xs="12" sm="6" md="4">
-                        <MudCard Elevation="0" Style="border-radius: 16px; border: 1px solid rgba(128,128,128,0.1);">
-                            <MudCardContent>
-                                <MudText Typo="Typo.h6" Style="font-weight: 700;">ޕަބްލިޝްކުރެވިފައިވާ ލިޔުން @i</MudText>
-                                <MudText Typo="Typo.body2" Color="Color.Secondary">ޕަބްލިޝްކުރި ތާރީޚް: 20 ޖެނުއަރީ 2026</MudText>
-                            </MudCardContent>
-                            <MudCardActions>
-                                <MudButton Variant="Variant.Text" Color="Color.Primary"
-                                           Style="border-radius: 999px;">ބައްލަވާ</MudButton>
-                                <MudButton Variant="Variant.Text" Color="Color.Warning"
-                                           Style="border-radius: 999px;">އަންލިސްޓްކުރައްވާ</MudButton>
-                            </MudCardActions>
-                        </MudCard>
-                    </MudItem>
-                }
-            </MudGrid>
-        </MudTabPanel>
-        <MudTabPanel Text="އަންލިސްޓްކުރެވިފައި">
-            <MudGrid>
-                @for (int i = 1; i <= 1; i++)
-                {
-                    <MudItem xs="12" sm="6" md="4">
-                        <MudCard Elevation="0" Style="border-radius: 16px; border: 1px solid rgba(128,128,128,0.1);">
-                            <MudCardContent>
-                                <MudText Typo="Typo.h6" Style="font-weight: 700;">އަންލިސްޓް ލިޔުން @i</MudText>
-                                <MudText Typo="Typo.body2" Color="Color.Secondary">އަންލިސްޓްކުރި ތާރީޚް: 18 ޖެނުއަރީ 2026</MudText>
-                            </MudCardContent>
-                            <MudCardActions>
-                                <MudButton Variant="Variant.Text" Color="Color.Primary"
-                                           Style="border-radius: 999px;">ބައްލަވާ</MudButton>
-                                <MudButton Variant="Variant.Text" Color="Color.Success"
-                                           Style="border-radius: 999px;">ޕަބްލިޝްކުރައްވާ</MudButton>
-                            </MudCardActions>
-                        </MudCard>
-                    </MudItem>
-                }
-            </MudGrid>
+        <MudTabPanel Text="@($"އަންލިސްޓްކުރެވިފައި ({_unlisted.Count})")">
+            <ArticleList Articles="_unlisted" EmptyText="އަންލިސްޓްކުރެވިފައިވާ ލިޔުމެއް ނެތް." />
         </MudTabPanel>
     </MudTabs>
 </div>
 
 @code {
+
+    private bool _isLoading = true;
+    private List<ArticleResponse> _drafts = [];
+    private List<ArticleResponse> _published = [];
+    private List<ArticleResponse> _unlisted = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadArticlesAsync();
+    }
+
+    private async Task LoadArticlesAsync()
+    {
+        _isLoading = true;
+
+        try
+        {
+            var token = await AuthService.GetAccessTokenAsync();
+            if (string.IsNullOrEmpty(token))
+            {
+                Snackbar.Add("ލޮގިން ވެލައްވާ.", Severity.Warning);
+                return;
+            }
+
+            using var request = new HttpRequestMessage(HttpMethod.Get, "api/articles/me");
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var httpResponse = await Http.SendAsync(request);
+            var result = await httpResponse.Content.ReadFromJsonAsync<Response<List<ArticleResponse>>>();
+
+            if (result?.Success == true && result.Data is not null)
+            {
+                _drafts = result.Data.Where(a => a.Status == "Draft").ToList();
+                _published = result.Data.Where(a => a.Status == "Published").ToList();
+                _unlisted = result.Data.Where(a => a.Status == "Unlisted").ToList();
+            }
+            else
+            {
+                Snackbar.Add(result?.Message ?? "ލިޔުންތައް ލޯޑުކުރެވޭ ވަރެއް ނުވި.", Severity.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Error: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
 
 }

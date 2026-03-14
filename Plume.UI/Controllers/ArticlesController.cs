@@ -43,6 +43,47 @@ public class ArticlesController : ControllerBase
         return Ok(Response<ArticleResponse>.Created(article.MapToResponse(), "Article saved successfully."));
     }
 
+    [HttpGet(EndPoints.Articles.UserGetAll)]
+    [ProducesResponseType(typeof(Response<List<ArticleResponse>>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (!Guid.TryParse(userIdClaim, out var authorId))
+            return Ok(Response<List<ArticleResponse>>.Unauthorized());
+
+        var articles = await _articleService.GetAllByAuthorIdAsync(authorId, cancellationToken);
+        var response = articles.Select(a => a.MapToResponse()).ToList();
+
+        return Ok(Response<List<ArticleResponse>>.Ok(response));
+    }
+
+    [HttpPut(EndPoints.Articles.UserUpdate)]
+    [ProducesResponseType(typeof(Response<ArticleResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Response<ArticleResponse>), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateArticleRequest request,
+        CancellationToken cancellationToken)
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (!Guid.TryParse(userIdClaim, out var authorId))
+            return Ok(Response<ArticleResponse>.Unauthorized());
+
+        if (string.IsNullOrWhiteSpace(request.Title))
+            return Ok(Response<ArticleResponse>.BadRequest("Title is required."));
+
+        var article = await _articleService.GetByIdAsync(id, cancellationToken);
+        if (article is null || article.AuthorId != authorId)
+            return Ok(Response<ArticleResponse>.NotFound($"Article with ID {id} not found."));
+
+        request.ApplyUpdate(article);
+        var updated = await _articleService.UpdateAsync(article, cancellationToken);
+        if (updated is null)
+            return Ok(Response<ArticleResponse>.ServerError("Failed to update article."));
+
+        return Ok(Response<ArticleResponse>.Ok(updated.MapToResponse()));
+    }
+
     [HttpGet(EndPoints.Articles.UserGet)]
     [ProducesResponseType(typeof(Response<ArticleResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Response<ArticleResponse>), StatusCodes.Status404NotFound)]

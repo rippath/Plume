@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Plume.UI.Client.Models;
 
 public class EditorJsConfig
@@ -9,6 +11,8 @@ public class EditorJsConfig
     public object? InlineToolbar { get; set; }
     public bool? Autofocus { get; set; }
     public object? Data { get; set; }
+    [JsonPropertyName("readOnly")]
+    public bool? ReadOnly { get; set; }
 }
 
 public class EditorToolConfig
